@@ -665,7 +665,7 @@ CURLcode Curl_output_aws_sigv4(struct Curl_easy *data, bool proxy)
     if(force_timestamp)
       clock = 0;
     else
-      clock = time(NULL);
+      time(&clock);
   }
 #else
   clock = time(NULL);
