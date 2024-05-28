@@ -182,6 +182,20 @@ void tool_version_info(void)
 #else
   printf("Release-Date: %s\n", LIBCURL_TIMESTAMP);
 #endif
+  {
+    time_t mytime = 0xFFFFFFFFFFFFFFFFi64;
+    printf("1: |time_t|%llu|\n", sizeof(time_t));
+    printf("2: |__time64_t|%llu|\n", sizeof(__time64_t));
+    printf("3: |__time32_t|%llu|\n", sizeof(__time32_t));
+    printf("4: |%p|\n", time);
+    printf("5: |%p|\n", _time64);
+    time(&mytime);
+    printf("a: |%zd|\n", mytime);
+    printf("b: |%016x|\n", mytime);
+    mytime = time(NULL);
+    printf("c: |%zd|\n", mytime);
+    printf("d: |%016x|\n", mytime);
+  }
   if(built_in_protos[0]) {
     const char *insert = NULL;
     /* we have ipfs and ipns support if libcurl has http support */
