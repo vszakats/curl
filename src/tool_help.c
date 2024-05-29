@@ -201,9 +201,11 @@ void tool_version_info(void)
     printf("5: |%p|\n", _time64);
     #endif
     time(&mytime);
-    printf("a: |%" CURL_FORMAT_CURL_OFF_T "|\n", (CURL_TYPEOF_CURL_OFF_T)mytime);
+    printf("a: |%" CURL_FORMAT_CURL_OFF_T "|\n",
+           (CURL_TYPEOF_CURL_OFF_T)mytime);
     mytime = time(NULL);
-    printf("c: |%" CURL_FORMAT_CURL_OFF_T "|\n", (CURL_TYPEOF_CURL_OFF_T)mytime);
+    printf("c: |%" CURL_FORMAT_CURL_OFF_T "|\n",
+           (CURL_TYPEOF_CURL_OFF_T)mytime);
   }
   if(built_in_protos[0]) {
     const char *insert = NULL;
