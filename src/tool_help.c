@@ -189,7 +189,14 @@ void tool_version_info(void)
     printf("2: |__time64_t|%d|\n", (int)sizeof(__time64_t));
     printf("3: |__time32_t|%d|\n", (int)sizeof(__time32_t));
     #endif
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#endif
     printf("4: |%p|\n", (void *)time);
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
     #if 0
     printf("5: |%p|\n", _time64);
     #endif
