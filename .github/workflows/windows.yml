@@ -204,6 +204,12 @@ jobs:
             config: '-DENABLE_DEBUG=ON -DBUILD_SHARED_LIBS=OFF -DCURL_USE_SCHANNEL=ON -DENABLE_UNICODE=ON'
             type: 'Debug'
             tflags: '~1139 ~1177 ~1477 ~2301 ~2302 ~3027'
+          - build: 'cmake'
+            env: '6.4.0-i686'
+            url: 'https://downloads.sourceforge.net/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/6.4.0/threads-win32/dwarf/i686-6.4.0-release-win32-dwarf-rt_v5-rev0.7z'
+            config: '-DENABLE_DEBUG=ON -DBUILD_SHARED_LIBS=OFF -DCURL_USE_SCHANNEL=ON -DENABLE_UNICODE=OFF -DCMAKE_UNITY_BUILD=OFF'
+            type: 'Debug'
+            tflags: '~1139 ~1177 ~1477 ~2301 ~2302 ~3027'
       fail-fast: false
     steps:
       - name: 'cache compiler (gcc ${{ matrix.env }})'
