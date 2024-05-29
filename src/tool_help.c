@@ -183,18 +183,20 @@ void tool_version_info(void)
   printf("Release-Date: %s\n", LIBCURL_TIMESTAMP);
 #endif
   {
-    time_t mytime = 0xFFFFFFFFFFFFFFFFi64;
-    printf("1: |time_t|%llu|\n", sizeof(time_t));
-    printf("2: |__time64_t|%llu|\n", sizeof(__time64_t));
-    printf("3: |__time32_t|%llu|\n", sizeof(__time32_t));
+    time_t mytime = (time_t)0xFFFFFFFFFFFFFFFF;
+    printf("1: |time_t|%d|\n", (int)sizeof(time_t));
+    #if 0
+    printf("2: |__time64_t|%d|\n", (int)sizeof(__time64_t));
+    printf("3: |__time32_t|%d|\n", (int)sizeof(__time32_t));
+    #endif
     printf("4: |%p|\n", time);
+    #if 0
     printf("5: |%p|\n", _time64);
+    #endif
     time(&mytime);
-    printf("a: |%zd|\n", mytime);
-    printf("b: |%016x|\n", mytime);
+    printf("a: |%" CURL_FORMAT_CURL_OFF_T "|\n", (CURL_TYPEOF_CURL_OFF_T)mytime);
     mytime = time(NULL);
-    printf("c: |%zd|\n", mytime);
-    printf("d: |%016x|\n", mytime);
+    printf("c: |%" CURL_FORMAT_CURL_OFF_T "|\n", (CURL_TYPEOF_CURL_OFF_T)mytime);
   }
   if(built_in_protos[0]) {
     const char *insert = NULL;
