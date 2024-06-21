@@ -263,9 +263,9 @@ jobs:
           else
             rcopts=''
           fi
-          [ '${{ matrix.type }}' = 'Debug' ] && options+=' -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG='
-          [ '${{ matrix.type }}' = 'Release' ] && options+=' -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE='
           cmake -B bld ${options} \
+            -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG= \
+            -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE= \
             "-DCMAKE_C_FLAGS=${cflags}" \
             "-DCMAKE_RC_COMPILE_OBJECT=${rcopts}" \
             '-DCMAKE_BUILD_TYPE=${{ matrix.type }}' \
@@ -368,9 +368,9 @@ jobs:
         run: |
           export PATH="$(cygpath "${USERPROFILE}")/my-cache/${{ matrix.dir }}/bin:/c/msys64/usr/bin:$PATH"
           cflags='-Wno-deprecated-declarations'  # for examples
-          [ '${{ matrix.type }}' = 'Debug' ] && options+=' -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG='
-          [ '${{ matrix.type }}' = 'Release' ] && options+=' -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE='
           cmake -B bld ${options} \
+            -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG= \
+            -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE= \
             '-GMSYS Makefiles' \
             -DCMAKE_C_COMPILER=gcc \
             "-DCMAKE_C_FLAGS=${cflags}" \
@@ -436,9 +436,9 @@ jobs:
           else
             system='Windows'
           fi
-          [ '${{ matrix.type }}' = 'Debug' ] && options+=' -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG='
-          [ '${{ matrix.type }}' = 'Release' ] && options+=' -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE='
           cmake -B bld ${options} \
+            -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG= \
+            -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE= \
             "-DCMAKE_SYSTEM_NAME=${system}" \
             -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake \
             "-DCMAKE_GENERATOR_PLATFORM=${archgen}" \
