@@ -585,6 +585,11 @@ jobs:
         if: ${{ matrix.build == 'cmake' && !cancelled() }}
         run: cat bld/CMakeFiles/CMake*.yaml 2>/dev/null || true
 
+      - name: 'curl_config.h'
+        run: |
+          echo '::group::raw'; cat bld/lib/curl_config.h || true; echo '::endgroup::'
+          cat bld/lib/curl_config.h | grep -F '#define' | sort || true
+
       - name: 'autotools build'
         if: ${{ matrix.build == 'autotools' }}
         run: make -C bld -j5 V=1
