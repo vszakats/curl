@@ -1173,9 +1173,9 @@ if(CURL_USE_GSSAPI)
       set(GSS_LDFLAGS "${GSS_LDFLAGS} -L\"${_dir}\"")
     endforeach()
 
-    check_include_file_concat("gssapi/gssapi.h" HAVE_GSSAPI_GSSAPI_H)
-    check_include_file_concat("gssapi/gssapi_generic.h" HAVE_GSSAPI_GSSAPI_GENERIC_H)
-    check_include_file_concat("gssapi/gssapi_krb5.h" HAVE_GSSAPI_GSSAPI_KRB5_H)
+    check_include_file("gssapi/gssapi.h" HAVE_GSSAPI_GSSAPI_H)
+    check_include_file("gssapi/gssapi_generic.h" HAVE_GSSAPI_GSSAPI_GENERIC_H)
+    check_include_file("gssapi/gssapi_krb5.h" HAVE_GSSAPI_GSSAPI_KRB5_H)
 
     if(GSS_FLAVOUR STREQUAL "MIT")
       set(_include_list "")
