@@ -976,8 +976,8 @@ if(NOT CURL_DISABLE_LDAP)
       list(APPEND CMAKE_REQUIRED_INCLUDES ${CURL_LDAP_INCLUDE_DIR})
     endif()
 
-    check_include_files("ldap.h" HAVE_LDAP_H)
-    check_include_files("lber.h" HAVE_LBER_H)
+    check_include_file("ldap.h" HAVE_LDAP_H)
+    check_include_file("lber.h" HAVE_LBER_H)
 
     if(NOT HAVE_LDAP_H)
       message(STATUS "LDAP_H not found CURL_DISABLE_LDAP set ON")
