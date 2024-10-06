@@ -605,6 +605,11 @@ case $host in
     ;;
 esac
 
+curl_cv_cygwin='no'
+case $host_os in
+  cygwin*|msys*) curl_cv_cygwin='yes';;
+esac
+
 AM_CONDITIONAL([HAVE_WINDRES],
   [test "$curl_cv_native_windows" = "yes" && test -n "${RC}"])
 
@@ -4112,12 +4117,15 @@ AC_CHECK_FUNCS([\
   sendmmsg \
   setlocale \
   setmode \
-  _setmode \
   setrlimit \
   snprintf \
   utime \
   utimes \
 ])
+
+if test "$curl_cv_native_windows" = 'yes' -o "$curl_cv_cygwin" = 'yes'; then
+  AC_CHECK_FUNCS([_setmode])
+fi
 
 if test -z "$ssl_backends"; then
   AC_CHECK_FUNCS([arc4random])

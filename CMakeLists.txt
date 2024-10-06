@@ -1542,8 +1542,11 @@ check_function_exists("if_nametoindex"  HAVE_IF_NAMETOINDEX)  # winsock2.h net/i
 check_function_exists("getrlimit"       HAVE_GETRLIMIT)
 check_function_exists("setlocale"       HAVE_SETLOCALE)
 check_function_exists("setmode"         HAVE_SETMODE)
-check_function_exists("_setmode"        HAVE__SETMODE)
 check_function_exists("setrlimit"       HAVE_SETRLIMIT)
+
+if(WIN32 OR CYGWIN)
+  check_function_exists("_setmode" HAVE__SETMODE)
+endif()
 
 if(NOT _ssl_enabled)
   check_symbol_exists("arc4random" "${CURL_INCLUDES};stdlib.h" HAVE_ARC4RANDOM)
