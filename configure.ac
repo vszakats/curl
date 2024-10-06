@@ -4112,6 +4112,7 @@ AC_CHECK_FUNCS([\
   sendmmsg \
   setlocale \
   setmode \
+  _setmode \
   setrlimit \
   snprintf \
   utime \
