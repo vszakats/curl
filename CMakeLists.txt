@@ -1543,7 +1543,7 @@ endif()
 
 if(NOT MSVC OR (MSVC_VERSION GREATER_EQUAL 1900))
   # Earlier MSVC compilers had faulty snprintf implementations
-  check_symbol_exists("snprintf" "stdio.h" HAVE_SNPRINTF)  # FUNCTION!
+  check_function_exists("snprintf" HAVE_SNPRINTF)
 endif()
 check_function_exists("mach_absolute_time" HAVE_MACH_ABSOLUTE_TIME)
 check_symbol_exists("inet_ntop" "${CURL_INCLUDES};stdlib.h;string.h" HAVE_INET_NTOP)  # arpa/inet.h
