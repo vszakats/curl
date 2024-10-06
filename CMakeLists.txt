@@ -1444,10 +1444,10 @@ foreach(_variable IN ITEMS
     HAVE_SYS_TYPES_H
     HAVE_UNISTD_H
     )
-  set(CURL_TEST_DEFINES "${CURL_TEST_DEFINES} -D${_variable}")
+  if(${_variable})
+    set(CURL_TEST_DEFINES "${CURL_TEST_DEFINES} -D${_variable}")
+  endif()
 endforeach()
-
-message(STATUS "||${CURL_TEST_DEFINES}||")
 
 check_type_size("size_t"      SIZEOF_SIZE_T)
 check_type_size("ssize_t"     SIZEOF_SSIZE_T)
