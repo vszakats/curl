@@ -23,6 +23,17 @@
 ###########################################################################
 # File defines convenience macros for available feature testing
 
+# Check if header file exists and add it to the list.
+# This macro is intended to be called multiple times with a sequence of
+# possibly dependent header files.  Some headers depend on others to be
+# compiled correctly.
+macro(check_include_file_concat _file _variable)
+  check_include_files("${CURL_INCLUDES};${_file}" ${_variable})
+  if(${_variable})
+    set(CURL_INCLUDES ${CURL_INCLUDES} ${_file})
+  endif()
+endmacro()
+
 # For other curl specific tests, use this macro.
 # Return result in variable: CURL_TEST_OUTPUT
 macro(curl_internal_test _curl_test)
