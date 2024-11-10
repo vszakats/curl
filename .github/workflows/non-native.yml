@@ -36,83 +36,6 @@ concurrency:
 permissions: {}
 
 jobs:
-  netbsd:
-    name: 'NetBSD (cmake, openssl, clang)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      matrix:
-        arch: ['x86_64']
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - name: 'cmake'
-        uses: cross-platform-actions/action@cdc9ee69ef84a5f2e59c9058335d9c57bcb4ac86 # v0.25.0
-        with:
-          operating_system: 'netbsd'
-          version: '10.0'
-          architecture: ${{ matrix.arch }}
-          run: |
-            # https://pkgsrc.se/
-            sudo pkgin -y install cmake ninja-build pkg-config perl brotli heimdal openldap-client libssh2 libidn2 libpsl nghttp2 py311-impacket
-            cmake -B bld -G Ninja \
-              -DCMAKE_UNITY_BUILD=ON -DCURL_TEST_BUNDLES=ON \
-              -DCURL_WERROR=ON \
-              -DENABLE_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG= \
-              -DCURL_USE_OPENSSL=ON \
-              -DCURL_BROTLI=ON -DCURL_USE_GSSAPI=ON \
-              || { cat bld/CMakeFiles/CMake*.yaml; false; }
-            echo '::group::curl_config.h (raw)'; cat bld/lib/curl_config.h || true; echo '::endgroup::'
-            echo '::group::curl_config.h'; grep -F '#define' bld/lib/curl_config.h | sort || true; echo '::endgroup::'
-            cmake --build bld --config Debug
-            bld/src/curl --disable --version
-            if [ '${{ matrix.arch }}' = 'x86_64' ]; then  # Slow on emulated CPU
-              cmake --build bld --config Debug --target testdeps
-              export TFLAGS='-j4'
-              cmake --build bld --config Debug --target test-ci
-            fi
-            echo '::group::build examples'
-            cmake --build bld --config Debug --target curl-examples
-            echo '::endgroup::'
-
-  openbsd:
-    name: 'OpenBSD (cmake, libressl, clang)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      matrix:
-        arch: ['x86_64']
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - name: 'cmake'
-        uses: cross-platform-actions/action@cdc9ee69ef84a5f2e59c9058335d9c57bcb4ac86 # v0.25.0
-        with:
-          operating_system: 'openbsd'
-          version: '7.5'
-          architecture: ${{ matrix.arch }}
-          run: |
-            # https://openbsd.app/
-            # https://www.openbsd.org/faq/faq15.html
-            sudo pkg_add cmake ninja brotli openldap-client-- libssh2 libidn2 libpsl nghttp2 python3 py3-impacket
-            cmake -B bld -G Ninja \
-              -DCMAKE_UNITY_BUILD=ON -DCURL_TEST_BUNDLES=ON \
-              -DCURL_WERROR=ON \
-              -DENABLE_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG= \
-              -DCURL_USE_OPENSSL=ON \
-              -DCURL_BROTLI=ON \
-              || { cat bld/CMakeFiles/CMake*.yaml; false; }
-            echo '::group::curl_config.h (raw)'; cat bld/lib/curl_config.h || true; echo '::endgroup::'
-            echo '::group::curl_config.h'; grep -F '#define' bld/lib/curl_config.h | sort || true; echo '::endgroup::'
-            cmake --build bld --config Debug
-            bld/src/curl --disable --version
-            if [ '${{ matrix.arch }}' = 'x86_64' ]; then  # Slow on emulated CPU
-              cmake --build bld --config Debug --target testdeps
-              export TFLAGS='-j8 ~3017 ~TFTP ~FTP'  # FIXME: TFTP requests executed twice? Related: `curl: (69) TFTP: Access Violation`?
-              cmake --build bld --config Debug --target test-ci
-            fi
-            echo '::group::build examples'
-            cmake --build bld --config Debug --target curl-examples
-            echo '::endgroup::'
-
   freebsd:
     name: 'FreeBSD (${{ matrix.build }}, openssl, ${{ matrix.compiler }}, ${{ matrix.arch }})'
     runs-on: ubuntu-latest
@@ -189,34 +112,4 @@ jobs:
             fi
             echo '::group::build examples'
             cmake --build bld --config Debug --target curl-examples
-            echo '::endgroup::'
-
-  omnios:
-    name: 'OmniOS (autotools, openssl, gcc, amd64)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - name: 'autotools'
-        uses: vmactions/omnios-vm@16b5996777bc675acd3d537f13df536a526cd16d # v1
-        with:
-          usesh: true
-          # https://pkg.omnios.org/r151052/core/en/index.shtml
-          prepare: pkg install build-essential libtool nghttp2
-          run: |
-            set -e
-            ln -s /usr/bin/gcpp /usr/bin/cpp  # Some tests expect `cpp`, which is named `gcpp` in this env.
-            autoreconf -fi
-            mkdir bld && cd bld && ../configure --enable-unity --enable-test-bundles --enable-debug --enable-warnings --enable-werror \
-              --prefix="${HOME}"/install \
-              --with-openssl \
-              --disable-dependency-tracking || { tail -n 1000 config.log; false; }
-            echo '::group::curl_config.h (raw)'; cat lib/curl_config.h || true; echo '::endgroup::'
-            echo '::group::curl_config.h'; grep -F '#define' lib/curl_config.h | sort || true; echo '::endgroup::'
-            gmake -j3 install
-            src/curl --disable --version
-            gmake -j3 -C tests
-            gmake test-ci V=1
-            echo '::group::build examples'
-            gmake -j3 examples
             echo '::endgroup::'
