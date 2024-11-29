@@ -289,7 +289,7 @@ jobs:
 
       - name: 'msys2 install packages'
         run: |
-          find /c/msys64
+          PATH=/usr/bin find /c/msys64
           # https://packages.msys2.org/search
           if [ '${{ matrix.sys }}' = 'msys' ]; then
             pkgs=$pkg_msys
