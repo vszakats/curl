@@ -99,9 +99,7 @@ jobs:
       - name: 'autoreconf'
         if: ${{ matrix.build == 'autotools' }}
         timeout-minutes: 2
-        run: |
-          env
-          autoreconf -fi
+        run: autoreconf -fi
 
       - name: 'configure'
         timeout-minutes: 5
@@ -300,7 +298,6 @@ jobs:
             pkgs=$pkg_mingw
           fi
           pacman --noconfirm --ask 20 --noprogressbar --sync --needed $pkgs
-          #PATH=/usr/bin find /c/msys64
 
       - name: 'autoreconf'
         if: ${{ matrix.build == 'autotools' }}
@@ -355,13 +352,10 @@ jobs:
 
       - name: 'configure log'
         if: ${{ !cancelled() }}
-        run: |
-          #PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
-          cat bld/config.log bld/CMakeFiles/CMake*.yaml 2>/dev/null || true
+        run: cat bld/config.log bld/CMakeFiles/CMake*.yaml 2>/dev/null || true
 
       - name: 'curl_config.h'
         run: |
-          #PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           echo '::group::raw'; cat bld/lib/curl_config.h || true; echo '::endgroup::'
           grep -F '#define' bld/lib/curl_config.h | sort || true
 
@@ -413,7 +407,6 @@ jobs:
         if: ${{ matrix.tflags != 'skipall' && matrix.tflags != 'skiprun' }}
         timeout-minutes: 5
         run: |
-          #PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           /c/ProgramData/chocolatey/choco.exe install --yes --no-progress --limit-output --timeout 180 --force stunnel || true
           curl --disable --fail --silent --show-error --connect-timeout 15 --max-time 60 --retry 3 https://live.sysinternals.com/handle64.exe --output /bin/handle64.exe
 
