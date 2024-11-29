@@ -374,7 +374,7 @@ jobs:
       - name: 'curl version'
         timeout-minutes: 1
         run: |
-          #PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
+          PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           if [ '${{ matrix.build }}' = 'cmake' ]; then
             PATH="$PWD/bld/lib:$PATH"
           else
