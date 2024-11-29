@@ -236,7 +236,7 @@ jobs:
           fi
 
   msys2_local:  # both msys and mingw-w64
-    name: "${{ matrix.sys == 'msys' && 'msys2' || 'mingw' }}, ${{ matrix.build == 'cmake' && 'CM' || 'AM' }} ${{ matrix.env }} ${{ matrix.name }} ${{ matrix.test }}"
+    name: "${{ matrix.sys == 'msys' && 'msys2' || 'mingw' }} NEW, ${{ matrix.build == 'cmake' && 'CM' || 'AM' }} ${{ matrix.env }} ${{ matrix.name }} ${{ matrix.test }}"
     runs-on: windows-latest
     timeout-minutes: 30
     env:
