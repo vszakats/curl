@@ -434,3 +434,139 @@ jobs:
           else
             make -C bld -j5 V=1 examples
           fi
+
+  msvc:
+    name: 'msvc, CM ${{ matrix.arch }}-${{ matrix.plat }} ${{ matrix.name }}'
+    runs-on: windows-latest
+    timeout-minutes: 55
+    defaults:
+      run:
+        shell: C:\msys64\usr\bin\bash.exe {0}
+    env:
+      MSYSTEM: UCRT64
+      VCPKG_BINARY_SOURCES: 'clear;x-gha,readwrite'
+      VCPKG_DISABLE_METRICS: '1'
+    strategy:
+      matrix:
+        include:
+          - name: 'openssl'
+            install: 'brotli zlib zstd libpsl nghttp2 nghttp3 openssl libssh2 pkgconf gsasl c-ares libuv krb5'
+            arch: 'x64'
+            plat: 'windows'
+            type: 'Debug'
+            tflags: '~1516 ~2301 ~2302 ~2303 ~2307'
+            config: >-
+              -DCURL_BROTLI=ON -DCURL_ZSTD=ON -DCURL_USE_LIBSSH2=ON
+              -DCURL_USE_SCHANNEL=OFF -DCURL_USE_OPENSSL=ON -DUSE_OPENSSL_QUIC=ON
+              -DCURL_USE_GSASL=ON -DENABLE_ARES=ON -DCURL_USE_LIBUV=ON -DCURL_USE_GSSAPI=ON
+
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: 'vcpkg cache setup'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+      - name: 'vcpkg versions'
+        timeout-minutes: 1
+        run: |
+          git -C "$VCPKG_INSTALLATION_ROOT" show --no-patch --format='%H %ai'
+          vcpkg version
+
+      - name: 'vcpkg build'
+        timeout-minutes: 35
+        run: vcpkg x-set-installed ${{ matrix.install }} '--triplet=${{ matrix.arch }}-${{ matrix.plat }}'
+
+      - name: 'configure'
+        timeout-minutes: 5
+        run: |
+          PATH="/c/msys64/usr/bin:$PATH"
+          if [ '${{ matrix.plat }}' = 'uwp' ]; then
+            options+=' -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0'
+            cflags='-DWINAPI_FAMILY=WINAPI_FAMILY_PC_APP'
+            ldflags='/OPT:NOREF /OPT:NOICF /APPCONTAINER:NO'
+            vsglobals=';AppxPackage=false;WindowsAppContainer=false'
+          fi
+          cmake -B bld ${options} \
+            "-DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" \
+            "-DVCPKG_INSTALLED_DIR=$VCPKG_INSTALLATION_ROOT/installed" \
+            '-DVCPKG_TARGET_TRIPLET=${{ matrix.arch }}-${{ matrix.plat }}' \
+            "-DCMAKE_C_FLAGS=${cflags}" \
+            "-DCMAKE_EXE_LINKER_FLAGS=/INCREMENTAL:NO ${ldflags}" \
+            "-DCMAKE_SHARED_LINKER_FLAGS=/INCREMENTAL:NO ${ldflags}" \
+            "-DCMAKE_VS_GLOBALS=TrackFileAccess=false${vsglobals}" \
+            '-DCMAKE_BUILD_TYPE=${{ matrix.type }}' \
+            -DCMAKE_UNITY_BUILD=ON -DCURL_TEST_BUNDLES=ON \
+            -DCURL_WERROR=ON \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DENABLE_DEBUG=ON \
+            -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG= \
+            -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE= \
+            ${{ matrix.config }}
+
+      - name: 'configure log'
+        if: ${{ !cancelled() }}
+        run: cat bld/CMakeFiles/CMake*.yaml 2>/dev/null || true
+
+      - name: 'curl_config.h'
+        run: |
+          echo '::group::raw'; cat bld/lib/curl_config.h || true; echo '::endgroup::'
+          grep -F '#define' bld/lib/curl_config.h | sort || true
+
+      - name: 'build'
+        timeout-minutes: 5
+        run: |
+          PATH="/c/msys64/usr/bin:$PATH"
+          cmake --build bld --config '${{ matrix.type }}' --parallel 5
+
+      - name: 'curl version'
+        timeout-minutes: 1
+        run: |
+          PATH=/usr/bin find . -name '*.exe' -o -name '*.dll'
+          if [ '${{ matrix.plat }}' != 'uwp' ]; then  # Missing: ucrtbased.dll, VCRUNTIME140D.dll, VCRUNTIME140D_APP.dll
+            PATH="$PWD/bld/lib:$PATH"
+            bld/src/curl.exe --disable --version
+          fi
+
+      - name: 'build tests'
+        if: ${{ matrix.tflags != 'skipall' }}
+        timeout-minutes: 10
+        run: |
+          PATH="/c/msys64/usr/bin:$PATH"
+          cmake --build bld --config '${{ matrix.type }}' --parallel 5 --target testdeps
+
+      - name: 'install test prereqs'
+        if: ${{ matrix.tflags != 'skipall' && matrix.tflags != 'skiprun' }}
+        timeout-minutes: 5
+        run: |
+          # GnuTLS is not fully functional on Windows, so skip the tests
+          # https://github.com/ShiftMediaProject/gnutls/issues/23
+          if [[ '${{ matrix.name }}' != *'gnutls'* ]]; then
+            /c/ProgramData/chocolatey/choco.exe install --yes --no-progress --limit-output --timeout 180 --force stunnel openssh || true
+          fi
+          curl --disable --fail --silent --show-error --connect-timeout 15 --max-time 60 --retry 3 https://live.sysinternals.com/handle64.exe --output /bin/handle64.exe
+          python3 -m pip --disable-pip-version-check --no-input --no-cache-dir install --progress-bar off --prefer-binary impacket
+
+      - name: 'run tests'
+        if: ${{ matrix.tflags != 'skipall' && matrix.tflags != 'skiprun' }}
+        timeout-minutes: 10
+        run: |
+          export TFLAGS='-j8 ~WebSockets ~SCP ~612 ${{ matrix.tflags }}'
+          if [[ '${{ matrix.install }}' = *'libssh2[core,zlib]'* ]]; then
+            TFLAGS+=' ~SFTP'
+          elif [[ '${{ matrix.install }}' = *'libssh '* ]]; then
+            TFLAGS+=' ~614'  # 'SFTP pre-quote chmod' SFTP, pre-quote, directory
+          fi
+          PATH="$PWD/bld/lib:$PATH:/c/Program Files (x86)/stunnel/bin:/c/Program Files/OpenSSH-Win64"
+          PATH="/c/msys64/usr/bin:$PATH"
+          cmake --build bld --config '${{ matrix.type }}' --target test-ci
+
+      - name: 'build examples'
+        timeout-minutes: 5
+        run: |
+          PATH="/c/msys64/usr/bin:$PATH"
+          cmake --build bld --config '${{ matrix.type }}' --parallel 5 --target curl-examples
