@@ -297,6 +297,7 @@ jobs:
             pkgs=$pkg_mingw
           fi
           pacman --noconfirm --ask 20 --noprogressbar --sync --needed $pkgs
+          PATH=/usr/bin find /c/msys64
 
       - name: 'autoreconf'
         if: ${{ matrix.build == 'autotools' }}
