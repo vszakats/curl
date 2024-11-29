@@ -99,7 +99,9 @@ jobs:
       - name: 'autoreconf'
         if: ${{ matrix.build == 'autotools' }}
         timeout-minutes: 2
-        run: autoreconf -fi
+        run: |
+          env
+          autoreconf -fi
 
       - name: 'configure'
         timeout-minutes: 5
@@ -305,6 +307,7 @@ jobs:
         timeout-minutes: 2
         run: |
           PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
+          export ACLOCAL_PATH='/c/msys64/${{ matrix.sys }}/share/aclocal'
           autoreconf -fi
 
       - name: 'configure'
