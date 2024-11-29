@@ -297,19 +297,19 @@ jobs:
             pkgs=$pkg_mingw
           fi
           pacman --noconfirm --ask 20 --noprogressbar --sync --needed $pkgs
-          PATH=/usr/bin find /c/msys64
+          #PATH=/usr/bin find /c/msys64
 
       - name: 'autoreconf'
         if: ${{ matrix.build == 'autotools' }}
         timeout-minutes: 2
         run: |
-          PATH="/c/msys64/usr/bin:$PATH"
+          PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           autoreconf -fi
 
       - name: 'configure'
         timeout-minutes: 5
         run: |
-          PATH="/c/msys64/usr/bin:$PATH"
+          PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           if [ '${{ matrix.build }}' = 'cmake' ]; then
             if [[ '${{ matrix.env }}' = 'clang'* ]]; then
               options='-DCMAKE_C_COMPILER=clang'
@@ -352,19 +352,19 @@ jobs:
       - name: 'configure log'
         if: ${{ !cancelled() }}
         run: |
-          #PATH="/c/msys64/usr/bin:$PATH"
+          #PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           cat bld/config.log bld/CMakeFiles/CMake*.yaml 2>/dev/null || true
 
       - name: 'curl_config.h'
         run: |
-          #PATH="/c/msys64/usr/bin:$PATH"
+          #PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           echo '::group::raw'; cat bld/lib/curl_config.h || true; echo '::endgroup::'
           grep -F '#define' bld/lib/curl_config.h | sort || true
 
       - name: 'build'
         timeout-minutes: 10
         run: |
-          PATH="/c/msys64/usr/bin:$PATH"
+          PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           if [ '${{ matrix.build }}' = 'cmake' ]; then
             cmake --build bld --config '${{ matrix.type }}'
           else
@@ -374,7 +374,7 @@ jobs:
       - name: 'curl version'
         timeout-minutes: 1
         run: |
-          #PATH="/c/msys64/usr/bin:$PATH"
+          #PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           if [ '${{ matrix.build }}' = 'cmake' ]; then
             PATH="$PWD/bld/lib:$PATH"
           else
@@ -391,7 +391,7 @@ jobs:
         if: ${{ matrix.tflags != 'skipall' }}  # Save time by skipping this for autotools
         timeout-minutes: 10
         run: |
-          PATH="/c/msys64/usr/bin:$PATH"
+          PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           if [ '${{ matrix.build }}' = 'cmake' ]; then
             cmake --build bld --config '${{ matrix.type }}' --target testdeps
           else
@@ -409,7 +409,7 @@ jobs:
         if: ${{ matrix.tflags != 'skipall' && matrix.tflags != 'skiprun' }}
         timeout-minutes: 5
         run: |
-          #PATH="/c/msys64/usr/bin:$PATH"
+          #PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           /c/ProgramData/chocolatey/choco.exe install --yes --no-progress --limit-output --timeout 180 --force stunnel || true
           curl --disable --fail --silent --show-error --connect-timeout 15 --max-time 60 --retry 3 https://live.sysinternals.com/handle64.exe --output /bin/handle64.exe
 
@@ -417,7 +417,7 @@ jobs:
         if: ${{ matrix.tflags != 'skipall' && matrix.tflags != 'skiprun' }}
         timeout-minutes: 10
         run: |
-          PATH="/c/msys64/usr/bin:$PATH"
+          PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           export TFLAGS='-j8 ${{ matrix.tflags }} ~SCP'
           if [ '${{ matrix.sys }}' != 'msys' ]; then
             TFLAGS+=' ~2301 ~2302'  # WebSockets'
@@ -441,7 +441,7 @@ jobs:
         if: ${{ matrix.build == 'cmake' || (matrix.tflags == 'skipall' || matrix.tflags == 'skiprun') }}  # Save time by skipping this for autotools running tests
         timeout-minutes: 5
         run: |
-          PATH="/c/msys64/usr/bin:$PATH"
+          PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           if [ '${{ matrix.build }}' = 'cmake' ]; then
             cmake --build bld --config '${{ matrix.type }}' --target curl-examples
           else
