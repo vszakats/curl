@@ -310,9 +310,7 @@ jobs:
       - name: 'configure'
         timeout-minutes: 5
         run: |
-          if [ "${MSYSTEM}" = 'msys' ]; then
-            MSYSTEM=MSYS
-          fi
+          MSYSTEM="${MSYSTEM^^}"
           PATH="/c/msys64/${{ matrix.sys }}/bin:/c/msys64/usr/bin:$PATH"
           if [ '${{ matrix.build }}' = 'cmake' ]; then
             if [[ '${{ matrix.env }}' = 'clang'* ]]; then
