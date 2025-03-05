@@ -1836,6 +1836,7 @@ sub singletest {
 
     if($singletest_state{$runnerid} == ST_INIT) {
         my $logdir = getrunnerlogdir($runnerid);
+        logmsg "ERROR: testing hello msbuild\n";
         # first, remove all lingering log & lock files
         if((!cleardir($logdir) || !cleardir("$logdir/$LOCKDIR"))
             && $clearlocks) {
