@@ -55,8 +55,8 @@ target_include_directories(libtests PRIVATE
   "${PROJECT_SOURCE_DIR}/lib"            # for "curl_setup.h"
   "${PROJECT_SOURCE_DIR}/lib/curlx"      # for curlx
   "${PROJECT_SOURCE_DIR}/src"            # for "tool_binmode.h"
-  "${PROJECT_SOURCE_DIR}/tests/libtest"  # to be able to build generated tests
-  "${PROJECT_SOURCE_DIR}/tests/unit"     # for curlcheck.h
+  "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${PROJECT_SOURCE_DIR}/tests/unit"     # for "curlcheck.h"
 )
 set_property(TARGET libtests APPEND PROPERTY COMPILE_DEFINITIONS "${CURL_DEBUG_MACROS}" "CURL_NO_OLDIES" "CURL_DISABLE_DEPRECATION")
 set_target_properties(libtests PROPERTIES OUTPUT_NAME "${BUNDLE}" PROJECT_LABEL "Test ${BUNDLE}")

@@ -45,7 +45,7 @@ target_include_directories(servers PRIVATE
   "${PROJECT_SOURCE_DIR}/lib"           # for "curl_setup.h"
   "${PROJECT_SOURCE_DIR}/lib/curlx"     # for curlx
   "${PROJECT_SOURCE_DIR}/src"           # for "tool_binmode.h", "tool_xattr.h"
-  "${PROJECT_SOURCE_DIR}/tests/server"  # for "first.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 target_link_libraries(servers ${CURL_LIBS})
 if(ENABLE_SERVER_DEBUG)
