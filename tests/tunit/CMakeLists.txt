@@ -42,8 +42,8 @@ target_include_directories(tunits PRIVATE
   "${PROJECT_SOURCE_DIR}/lib"            # for "curl_setup.h"
   "${PROJECT_SOURCE_DIR}/lib/curlx"      # for curlx
   "${PROJECT_SOURCE_DIR}/src"
-  "${CMAKE_CURRENT_SOURCE_DIR}"
   "${PROJECT_SOURCE_DIR}/tests/libtest"  # for "first.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}"
   "${PROJECT_SOURCE_DIR}/tests/unit"     # for "curlcheck.h"
 )
 set_property(TARGET tunits APPEND PROPERTY COMPILE_DEFINITIONS "${CURL_DEBUG_MACROS}" "CURL_NO_OLDIES" "CURL_DISABLE_DEPRECATION")

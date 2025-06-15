@@ -42,8 +42,8 @@ target_include_directories(units PRIVATE
   "${PROJECT_SOURCE_DIR}/lib"            # for "curl_setup.h"
   "${PROJECT_SOURCE_DIR}/lib/curlx"      # for curlx
   "${PROJECT_SOURCE_DIR}/src"
-  "${CMAKE_CURRENT_SOURCE_DIR}"
   "${PROJECT_SOURCE_DIR}/tests/libtest"  # for "first.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 set_property(TARGET units APPEND PROPERTY COMPILE_DEFINITIONS "${CURL_DEBUG_MACROS}" "CURL_NO_OLDIES" "CURL_DISABLE_DEPRECATION")
 set_property(TARGET units APPEND PROPERTY COMPILE_DEFINITIONS "BUILDING_LIBCURL")  # unit tests are small pretend-libcurl-programs
