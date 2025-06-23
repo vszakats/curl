@@ -53,15 +53,6 @@ AM_CPPFLAGS += -DCURL_STATICLIB
 endif
 AM_CPPFLAGS += -DCURL_NO_OLDIES
 
-if USE_CPPFLAG_CURL_STATICLIB
-curlx_src =
-else
-# These are part of the libcurl static lib. Add them here when linking shared.
-curlx_src = $(CURLX_CFILES)
-endif
-${BUNDLE}.c: $(top_srcdir)/scripts/mk-unity.pl Makefile.inc $(FIRSTFILES) $(curlx_src) $(TESTFILES)
-	@PERL@ $(top_srcdir)/scripts/mk-unity.pl --include $(curlx_src) --test $(TESTFILES) > ${BUNDLE}.c
-
 noinst_PROGRAMS = $(BUNDLE)
 LDADD = $(top_builddir)/lib/libcurl.la
 CLEANFILES = ${BUNDLE}.c
@@ -71,10 +62,8 @@ CS_0 = @echo "  RUN     " $@;
 CS_1 =
 CS_ = $(CS_0)
 
-# ignore generated C files since they play by slightly different rules!
 checksrc:
 	$(CHECKSRC)(@PERL@ $(top_srcdir)/scripts/checksrc.pl -D$(srcdir) \
-	  -W$(srcdir)/${BUNDLE}.c \
 	  $(srcdir)/*.[ch])
 
 if NOT_CURL_CI
