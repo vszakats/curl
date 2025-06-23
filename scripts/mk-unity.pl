@@ -35,18 +35,11 @@ if(!@ARGV) {
 
 my @src;
 my %include;
-my $in_include = 0;
 foreach my $src (@ARGV) {
     if($src eq "--include") {
-        $in_include = 1;
-    }
-    elsif($in_include) {
-        $include{$src} = 1;
-        push @src, $src;
     }
     else {
         push @src, $src;
-        $any_test = 1;
     }
 }
 
