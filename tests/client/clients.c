@@ -24,6 +24,7 @@
 #include "first.h"
 
 #ifndef CURL_STATICLIB
+/* Already exported from the libcurl static build. */
 #include "../../lib/curlx/multibyte.c"
 #include "../../lib/curlx/timediff.c"
 #include "../../lib/curlx/wait.c"

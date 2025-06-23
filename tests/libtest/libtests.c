@@ -28,6 +28,7 @@
 #include "testtrace.c"
 
 #ifndef CURL_STATICLIB
+/* Already exported from the libcurl static build. */
 #include "../../lib/curlx/warnless.c"
 #include "../../lib/curlx/multibyte.c"
 #include "../../lib/curlx/timediff.c"
