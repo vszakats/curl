@@ -23,9 +23,11 @@
  ***************************************************************************/
 #include "first.h"
 
+#ifndef CURL_STATICLIB
 #include "../../lib/curlx/multibyte.c"
 #include "../../lib/curlx/timediff.c"
 #include "../../lib/curlx/wait.c"
+#endif
 
 #include "h2_pausing.c"
 #include "h2_serverpush.c"

@@ -27,6 +27,7 @@
 #include "testutil.c"
 #include "testtrace.c"
 
+#ifndef CURL_STATICLIB
 #include "../../lib/curlx/warnless.c"
 #include "../../lib/curlx/multibyte.c"
 #include "../../lib/curlx/timediff.c"
@@ -34,6 +35,7 @@
 #include "../../lib/curl_threads.c"
 #include "../../lib/curlx/version_win32.c"
 #include "../../lib/curlx/wait.c"
+#endif
 
 #include "lib500.c"
 #include "lib501.c"
