@@ -30,24 +30,13 @@ use strict;
 use warnings;
 
 if(!@ARGV) {
-    die "Usage: $0 [--include <include-c-sources>]\n";
-}
-
-my @src;
-my %include;
-foreach my $src (@ARGV) {
-    if($src eq "--include") {
-    }
-    else {
-        push @src, $src;
-    }
+    die "Usage: $0 <include-c-sources>\n";
 }
 
 print "/* !checksrc! disable COPYRIGHT all */\n\n";
 
-foreach my $src (@src) {
+foreach my $src (@ARGV) {
     if($src =~ /([a-z0-9_]+)\.c$/) {
-        my $name = $1;
         print "#include \"$src\"\n";
     }
 }
