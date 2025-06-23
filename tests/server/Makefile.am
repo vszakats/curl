@@ -31,12 +31,10 @@ AUTOMAKE_OPTIONS = foreign nostdinc
 # $(top_srcdir)/include is for libcurl's external include files
 # $(top_builddir)/lib is for libcurl's generated lib/curl_config.h file
 # $(top_srcdir)/lib for libcurl's lib/curl_setup.h and other "borrowed" files
-# $(srcdir) for the generated bundle source to find included test sources
 
 AM_CPPFLAGS = -I$(top_srcdir)/include        \
               -I$(top_builddir)/lib          \
-              -I$(top_srcdir)/lib            \
-              -I$(srcdir)
+              -I$(top_srcdir)/lib
 
 # Get BUNDLE, FIRSTFILES, UTILS, CURLX_CFILES, TESTFILES variables
 include Makefile.inc
