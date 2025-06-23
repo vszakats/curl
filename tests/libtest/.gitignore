@@ -3,5 +3,4 @@
 # SPDX-License-Identifier: curl
 
 libtests
-libtests.c
 lib1521.c
