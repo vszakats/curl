@@ -429,7 +429,7 @@ static CURLcode recvmmsg_packets(struct Curl_cfilter *cf,
       if(!cf->connected && SOCKERRNO == SOCKECONNREFUSED) {
         struct ip_quadruple ip;
         Curl_cf_socket_peek(cf->next, data, NULL, NULL, &ip);
-        failf(data, "QUIC: connection to %s port %u refused",
+        failf(data, "QUIC: connection to %s port %d refused",
               ip.remote_ip, ip.remote_port);
         result = CURLE_COULDNT_CONNECT;
         goto out;
@@ -472,7 +472,7 @@ static CURLcode recvmmsg_packets(struct Curl_cfilter *cf,
 out:
   if(total_nread || result)
     CURL_TRC_CF(data, cf, "vquic_recvmmsg(len=%zu, packets=%zu, calls=%zu)"
-                " -> %d", total_nread, pkts, calls, result);
+                " -> %u", total_nread, pkts, calls, result);
   Curl_multi_xfer_sockbuf_release(data, sockbuf);
   return result;
 }
@@ -522,7 +522,7 @@ static CURLcode recvmsg_packets(struct Curl_cfilter *cf,
       if(!cf->connected && SOCKERRNO == SOCKECONNREFUSED) {
         struct ip_quadruple ip;
         Curl_cf_socket_peek(cf->next, data, NULL, NULL, &ip);
-        failf(data, "QUIC: connection to %s port %u refused",
+        failf(data, "QUIC: connection to %s port %d refused",
               ip.remote_ip, ip.remote_port);
         result = CURLE_COULDNT_CONNECT;
         goto out;
@@ -562,7 +562,7 @@ static CURLcode recvmsg_packets(struct Curl_cfilter *cf,
 out:
   if(total_nread || result)
     CURL_TRC_CF(data, cf, "vquic_recvmsg(len=%zu, packets=%zu, calls=%zu)"
-                " -> %d", total_nread, pkts, calls, result);
+                " -> %u", total_nread, pkts, calls, result);
   return result;
 }
 
@@ -597,7 +597,7 @@ static CURLcode recvfrom_packets(struct Curl_cfilter *cf,
       if(!cf->connected && SOCKERRNO == SOCKECONNREFUSED) {
         struct ip_quadruple ip;
         Curl_cf_socket_peek(cf->next, data, NULL, NULL, &ip);
-        failf(data, "QUIC: connection to %s port %u refused",
+        failf(data, "QUIC: connection to %s port %d refused",
               ip.remote_ip, ip.remote_port);
         result = CURLE_COULDNT_CONNECT;
         goto out;
@@ -621,7 +621,7 @@ static CURLcode recvfrom_packets(struct Curl_cfilter *cf,
 out:
   if(total_nread || result)
     CURL_TRC_CF(data, cf, "vquic_recvfrom(len=%zu, packets=%zu, calls=%zu)"
-                " -> %d", total_nread, pkts, calls, result);
+                " -> %u", total_nread, pkts, calls, result);
   return result;
 }
 #endif /* !HAVE_SENDMMSG && !HAVE_SENDMSG */
