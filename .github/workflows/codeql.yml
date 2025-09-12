@@ -69,7 +69,6 @@ jobs:
           build-mode: manual
 
       - name: 'build'
-        timeout-minutes: 20
         run: |
           cmake -B . -G Ninja -DENABLE_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug
           cmake --build . --verbose --target units
