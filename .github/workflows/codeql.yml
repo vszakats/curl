@@ -48,6 +48,7 @@ jobs:
       security-events: write
     env:
       CC: clang
+      LDFLAGS: -fuse-ld=lld
     steps:
       - name: 'install prereqs'
         timeout-minutes: 5
