@@ -72,7 +72,6 @@ jobs:
         timeout-minutes: 10
         run: |
           cmake -B . -G Ninja -DENABLE_DEBUG=ON
-          cmake --build . --verbose
           cmake --build . --verbose --target units
           cmake --build . --verbose --target libtests
           cmake --build . --verbose --target servers
