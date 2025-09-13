@@ -29,34 +29,22 @@
 
 use strict;
 use warnings;
-
-if(!@ARGV) {
-    die "Usage: $0 [--test <tests>] [--include <include-c-sources>]\n";
-}
+use Getopt::Long;
 
 my @src;
-my %include;
-my $in_include = 0;
-my $any_test = 0;
-foreach my $src (@ARGV) {
-    if($src eq "--test") {
-        $in_include = 0;
-    }
-    elsif($src eq "--include") {
-        $in_include = 1;
-    }
-    elsif($in_include) {
-        $include{$src} = 1;
-        push @src, $src;
-    }
-    else {
-        push @src, $src;
-        $any_test = 1;
-    }
-}
+my @test;
+my @include;
+
+GetOptions(
+    'test=s{,}'    => \@test,
+    'include=s{,}' => \@include,
+) or die "Usage: $0 [--test <tests>] [--include <include-c-sources>]\n";
+
+push @src, @include, @test;
+my %include = map { $_ => 1 } @include;
 
 print "/* !checksrc! disable COPYRIGHT all */\n\n";
-if($any_test) {
+if(scalar @test) {
     print "#include \"first.h\"\n\n";
 }
 
@@ -72,7 +60,7 @@ foreach my $src (@src) {
     }
 }
 
-if($any_test) {
+if(scalar @test) {
     print "\nconst struct entry_s s_entries[] = {\n$tlist  {NULL, NULL}\n};\n";
     print "\n#include \"first.c\"\n";
 }
