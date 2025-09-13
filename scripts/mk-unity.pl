@@ -31,36 +31,64 @@ use strict;
 use warnings;
 use Getopt::Long;
 
-my @src;
+my @allsrc;
 my @test;
 my @include;
+my $batches = 1;
+my $outprefix = '_out-N.c';
 
 GetOptions(
     'test=s{,}'    => \@test,
     'include=s{,}' => \@include,
-) or die "Usage: $0 [--test <tests>] [--include <include-c-sources>]\n";
+    'batches=i'    => \$batches,
+    'outprefix=s'  => \$outprefix,
+) or die "Usage: $0 [--batches=N] [--test <tests>] [--include <include-c-sources>]\n";
 
-push @src, @include, @test;
+@include = grep { $_ =~ '([a-z0-9_]+)\.c$' } @include;
+push @allsrc, @include, @test;
 my %include = map { $_ => 1 } @include;
 
-print "/* !checksrc! disable COPYRIGHT all */\n\n";
-if(scalar @test) {
-    print "#include \"first.h\"\n\n";
-}
+my $files_per_batch = int(scalar @allsrc / $batches);
+print $files_per_batch;
 
-my $tlist = "";
+my $pos = 0;
 
-foreach my $src (@src) {
-    if($src =~ /([a-z0-9_]+)\.c$/) {
-        my $name = $1;
-        print "#include \"$src\"\n";
-        if(not exists $include{$src}) {  # register test entry function
-            $tlist .= "  {\"$name\", test_$name},\n";
+for my $i (1..$batches) {
+
+    my $outfn = $outprefix;
+    $outfn =~ s/N/$i/;
+    open my $out, '>', $outfn or die "Failed to create $outfn: $!";
+
+    print $out "/* !checksrc! disable COPYRIGHT all */\n\n";
+
+    my $tlist = "";
+    if(scalar @test && $i == 1) {
+        print $out "#include \"first.h\"\n\n";
+
+        foreach my $src (@allsrc) {
+            if($src =~ /([a-z0-9_]+)\.c$/) {
+                my $name = $1;
+                if(not exists $include{$src}) {  # register test entry function
+                    $tlist .= "  {\"$name\", test_$name},\n";
+                    print $out "CURLcode test_$name(const char *arg);\n"
+                }
+            }
+        }
+        print $out "\n";
+    }
+
+    for my $i (1..$files_per_batch) {
+        my $src = $allsrc[$pos++];
+        if($src =~ /([a-z0-9_]+)\.c$/) {
+            my $name = $1;
+            print $out "#include \"$src\"\n";
         }
     }
-}
 
-if(scalar @test) {
-    print "\nconst struct entry_s s_entries[] = {\n$tlist  {NULL, NULL}\n};\n";
-    print "\n#include \"first.c\"\n";
+    if(scalar @test && $i == 1) {
+        print $out "\nconst struct entry_s s_entries[] = {\n$tlist  {NULL, NULL}\n};\n";
+        print $out "\n#include \"first.c\"\n";
+    }
+
+    close $out or warn "Failed to close $outfn: $!";
 }
