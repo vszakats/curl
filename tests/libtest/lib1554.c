@@ -56,7 +56,7 @@ static void t1554_test_unlock(CURL *curl, curl_lock_data data, void *useptr)
 }
 
 /* test function */
-static CURLcode test_lib1554(const char *URL)
+CURLcode test_lib1554(const char *URL)
 {
   CURLcode res = CURLE_OK;
   CURLSH *share = NULL;

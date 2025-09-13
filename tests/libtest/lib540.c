@@ -183,7 +183,7 @@ static CURLcode loop(int num, CURLM *multi, const char *url,
   return CURLE_OK;
 }
 
-static CURLcode test_lib540(const char *URL)
+CURLcode test_lib540(const char *URL)
 {
   CURLM *multi = NULL;
   struct curl_slist *headers = NULL;

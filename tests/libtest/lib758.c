@@ -494,7 +494,7 @@ test_cleanup:
   return res;
 }
 
-static CURLcode test_lib758(const char *URL)
+CURLcode test_lib758(const char *URL)
 {
   CURLcode rc;
   /* rerun the same transfer multiple times and make it fail in different
@@ -507,7 +507,7 @@ static CURLcode test_lib758(const char *URL)
 }
 
 #else /* T578_ENABLED */
-static CURLcode test_lib758(const char *URL)
+CURLcode test_lib758(const char *URL)
 {
   (void)URL;
   return CURLE_OK;

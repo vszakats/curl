@@ -23,7 +23,7 @@
  ***************************************************************************/
 #include "first.h"
 
-static CURLcode test_lib1599(const char *URL)
+CURLcode test_lib1599(const char *URL)
 {
   CURL *curl;
   CURLcode res = CURLE_OK;

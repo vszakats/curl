@@ -1534,7 +1534,7 @@ static int test_return_codes(void)
   return 0;
 }
 
-static CURLcode test_lib557(const char *URL)
+CURLcode test_lib557(const char *URL)
 {
   int errors = 0;
   (void)URL;

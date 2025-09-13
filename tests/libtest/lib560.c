@@ -35,7 +35,7 @@
  * fast/different compared to the real/distant servers we saw the bug happen
  * with.
  */
-static CURLcode test_lib560(const char *URL)
+CURLcode test_lib560(const char *URL)
 {
   CURL *curl = NULL;
   CURLM *multi = NULL;

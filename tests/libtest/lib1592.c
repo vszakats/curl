@@ -38,7 +38,7 @@
 
 #include "first.h"
 
-static CURLcode test_lib1592(const char *URL)
+CURLcode test_lib1592(const char *URL)
 {
   int stillRunning;
   CURLM *multi = NULL;

@@ -96,7 +96,7 @@ test_cleanup:
   return FALSE;
 }
 
-static CURLcode test_lib753(const char *URL)
+CURLcode test_lib753(const char *URL)
 {
   CURL *curl1 = NULL, *curl2 = NULL;
   CURLM *multi = NULL;

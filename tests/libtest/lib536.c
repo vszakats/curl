@@ -34,7 +34,7 @@ static void proxystat(CURL *curl)
   }
 }
 
-static CURLcode test_lib536(const char *URL)
+CURLcode test_lib536(const char *URL)
 {
   CURLcode res = CURLE_OK;
   CURL *curl;

@@ -247,7 +247,7 @@ static CURLcode t643_cyclic_add(void)
   return CURLE_OK;
 }
 
-static CURLcode test_lib643(const char *URL)
+CURLcode test_lib643(const char *URL)
 {
   CURLcode res;
 

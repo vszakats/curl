@@ -192,7 +192,7 @@ test_cleanup:
   return res;
 }
 
-static CURLcode test_lib554(const char *URL)
+CURLcode test_lib554(const char *URL)
 {
   CURLcode res;
 

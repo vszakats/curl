@@ -29,7 +29,7 @@
  * FTP get with NOBODY but no HEADER
  */
 
-static CURLcode test_lib542(const char *URL)
+CURLcode test_lib542(const char *URL)
 {
   CURL *curl;
   CURLcode res = CURLE_OK;

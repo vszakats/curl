@@ -34,7 +34,7 @@ static size_t t3034_read_cb(char *ptr, size_t size, size_t nmemb, void *userp)
   return tocopy;
 }
 
-static CURLcode test_lib3034(const char *URL)
+CURLcode test_lib3034(const char *URL)
 {
   CURL *curl;
   CURLcode res = CURLE_OK;

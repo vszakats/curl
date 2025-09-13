@@ -39,7 +39,7 @@ static int t1553_xferinfo(void *p,
   return 1; /* fail as fast as we can */
 }
 
-static CURLcode test_lib1553(const char *URL)
+CURLcode test_lib1553(const char *URL)
 {
   CURL *curl = NULL;
   CURLM *multi = NULL;

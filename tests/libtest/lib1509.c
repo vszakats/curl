@@ -43,7 +43,7 @@ static size_t WriteHeader(char *ptr, size_t size, size_t nmemb, void *stream)
   return nmemb * size;
 }
 
-static CURLcode test_lib1509(const char *URL)
+CURLcode test_lib1509(const char *URL)
 {
   long headerSize;
   CURLcode code;

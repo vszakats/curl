@@ -32,7 +32,7 @@
  * Use multi interface to get document over proxy with bad port number.
  * This caused the interface to "hang" in libcurl 7.10.2.
  */
-static CURLcode test_lib504(const char *URL)
+CURLcode test_lib504(const char *URL)
 {
   CURL *curl = NULL;
   CURLcode res = CURLE_OK;

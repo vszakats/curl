@@ -31,7 +31,7 @@
  * 3. with multi interface
  */
 
-static CURLcode test_lib575(const char *URL)
+CURLcode test_lib575(const char *URL)
 {
   CURL *curl = NULL;
   CURL *curldupe = NULL;
