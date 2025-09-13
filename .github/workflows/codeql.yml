@@ -71,10 +71,7 @@ jobs:
       - name: 'build'
         run: |
           cmake -B . -G Ninja -DENABLE_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug
-          cmake --build . --verbose --target units
-          cmake --build . --verbose --target libtests
-          cmake --build . --verbose --target servers
-          cmake --build . --verbose --target tunits
+          cmake --build . --verbose --target testdeps
           src/curl -V
 
       - name: 'perform analysis'
