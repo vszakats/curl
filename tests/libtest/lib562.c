@@ -33,7 +33,7 @@
 
  */
 
-static CURLcode test_lib562(const char *URL)
+CURLcode test_lib562(const char *URL)
 {
   CURL *curl;
   CURLcode res = CURLE_OK;

@@ -29,50 +29,79 @@
 
 use strict;
 use warnings;
+use Getopt::Long;
 
-if(!@ARGV) {
-    die "Usage: $0 [--test <tests>] [--include <include-c-sources>]\n";
-}
+my @allsrc;
+my @test;
+my @include;
+my $batches = 1;
+my $outprefix = '_out-N.c';
 
-my @src;
-my %include;
-my $in_include = 0;
-my $any_test = 0;
-foreach my $src (@ARGV) {
-    if($src eq "--test") {
-        $in_include = 0;
+GetOptions(
+    'test=s{,}'    => \@test,
+    'include=s{,}' => \@include,
+    'batches=i'    => \$batches,
+    'outprefix=s'  => \$outprefix,
+) or die "Usage: $0 [--batches=N] [--test <tests>] [--include <include-c-sources>]\n";
+
+@include = grep { $_ =~ '([a-z0-9_]+)\.c$' } @include;
+push @allsrc, @include, @test;
+my %include = map { $_ => 1 } @include;
+
+my $files_per_batch = int(scalar @allsrc / $batches);
+
+my $pos = 0;
+
+print @include, "\n";
+
+for my $i (1..$batches) {
+
+    my $outfn = $outprefix;
+    $outfn =~ s/N/$i/;
+    open my $out, '>', $outfn or die "Failed to create $outfn: $!";
+
+    print $out "/* !checksrc! disable COPYRIGHT all */\n\n";
+
+    my $tlist = "";
+    if(scalar @test) {
+        print $out "#include \"first.h\"\n\n";
+        if($i == 1) {
+            foreach my $src (@allsrc) {
+                if($src =~ /([a-z0-9_]+)\.c$/) {
+                    my $name = $1;
+                    if(not exists $include{$src}) {  # register test entry function
+                        $tlist .= "  {\"$name\", test_$name},\n";
+                        if($batches > 1) {
+                            print $out "extern CURLcode test_$name(const char *arg);\n";
+                        }
+                    }
+                }
+            }
+        }
+        print $out "\n";
     }
-    elsif($src eq "--include") {
-        $in_include = 1;
-    }
-    elsif($in_include) {
-        $include{$src} = 1;
-        push @src, $src;
-    }
-    else {
-        push @src, $src;
-        $any_test = 1;
-    }
-}
 
-print "/* !checksrc! disable COPYRIGHT all */\n\n";
-if($any_test) {
-    print "#include \"first.h\"\n\n";
-}
+    if($i == $batches) {
+        $files_per_batch = scalar @allsrc - $pos;
+    }
 
-my $tlist = "";
-
-foreach my $src (@src) {
-    if($src =~ /([a-z0-9_]+)\.c$/) {
-        my $name = $1;
-        print "#include \"$src\"\n";
-        if(not exists $include{$src}) {  # register test entry function
-            $tlist .= "  {\"$name\", test_$name},\n";
+    for my $j (1..$files_per_batch) {
+        my $src = $allsrc[$pos++];
+        if($src =~ /([a-z0-9_]+)\.c$/) {
+            my $name = $1;
+            if($i > 1) {
+                if(not exists $include{$src}) {
+                    print $out "extern CURLcode test_$name(const char *arg);\n";
+                }
+            }
+            print $out "#include \"$src\"\n";
         }
     }
-}
 
-if($any_test) {
-    print "\nconst struct entry_s s_entries[] = {\n$tlist  {NULL, NULL}\n};\n";
-    print "\n#include \"first.c\"\n";
+    if(scalar @test && $i == 1) {
+        print $out "\nconst struct entry_s s_entries[] = {\n$tlist  {NULL, NULL}\n};\n";
+        print $out "\n#include \"first.c\"\n";
+    }
+
+    close $out or warn "Failed to close $outfn: $!";
 }

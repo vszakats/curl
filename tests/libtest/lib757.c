@@ -54,7 +54,7 @@ static int seek_757(void *arg, curl_off_t offset, int origin)
   return CURL_SEEKFUNC_OK;
 }
 
-static CURLcode test_lib757(const char *URL)
+CURLcode test_lib757(const char *URL)
 {
   CURL *curl = NULL;
   curl_mime *mime1 = NULL;

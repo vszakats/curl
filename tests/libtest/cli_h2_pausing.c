@@ -86,7 +86,7 @@ static size_t cb(char *data, size_t size, size_t nmemb, void *clientp)
     return (CURLcode)2;                                                       \
   } while(0)
 
-static CURLcode test_cli_h2_pausing(const char *URL)
+CURLcode test_cli_h2_pausing(const char *URL)
 {
   struct handle handles[2];
   CURLM *multi_handle;
