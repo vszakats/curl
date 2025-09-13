@@ -41,7 +41,7 @@ list(APPEND TESTS_C "lib1521.c")
 
 add_custom_command(OUTPUT "${BUNDLE}-1.c" "${BUNDLE}-2.c" "${BUNDLE}-3.c" "${BUNDLE}-4.c"
   COMMAND ${PERL_EXECUTABLE} "${PROJECT_SOURCE_DIR}/scripts/mk-unity.pl"
-    --include ${UTILS_C} ${CURLX_C} --test ${TESTS_C} --batch=4 --outprefix=${BUNDLE}-N.c
+    --include ${UTILS_C} ${CURLX_C} --test ${TESTS_C} --batch=30 --outprefix=${BUNDLE}-N.c
   DEPENDS
     "${PROJECT_SOURCE_DIR}/scripts/mk-unity.pl" "${CMAKE_CURRENT_SOURCE_DIR}/Makefile.inc"
     ${FIRST_C} ${UTILS_C} ${CURLX_C} ${TESTS_C}
