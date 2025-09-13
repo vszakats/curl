@@ -49,7 +49,6 @@ push @allsrc, @include, @test;
 my %include = map { $_ => 1 } @include;
 
 my $files_per_batch = int(scalar @allsrc / $batches);
-print $files_per_batch;
 
 my $pos = 0;
 
