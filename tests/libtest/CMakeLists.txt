@@ -39,15 +39,15 @@ add_custom_command(OUTPUT "lib1521.c"
 
 list(APPEND TESTS_C "lib1521.c")
 
-add_custom_command(OUTPUT "${BUNDLE}-1.c" "${BUNDLE}-2.c" "${BUNDLE}-3.c" "${BUNDLE}-4.c"
+add_custom_command(OUTPUT "${BUNDLE}-1.c" "${BUNDLE}-2.c" "${BUNDLE}-3.c" "${BUNDLE}-4.c" "${BUNDLE}-5.c" "${BUNDLE}-6.c" "${BUNDLE}-7.c" "${BUNDLE}-8.c" "${BUNDLE}-9.c" "${BUNDLE}-10.c" "${BUNDLE}-11.c" "${BUNDLE}-12.c"
   COMMAND ${PERL_EXECUTABLE} "${PROJECT_SOURCE_DIR}/scripts/mk-unity.pl"
-    --include ${UTILS_C} ${CURLX_C} --test ${TESTS_C} --batch=30 --outprefix=${BUNDLE}-N.c
+    --include ${UTILS_C} ${CURLX_C} --test ${TESTS_C} --batch=12 --outprefix=${BUNDLE}-N.c
   DEPENDS
     "${PROJECT_SOURCE_DIR}/scripts/mk-unity.pl" "${CMAKE_CURRENT_SOURCE_DIR}/Makefile.inc"
     ${FIRST_C} ${UTILS_C} ${CURLX_C} ${TESTS_C}
   VERBATIM)
 
-add_executable(${BUNDLE} EXCLUDE_FROM_ALL "${BUNDLE}-1.c" "${BUNDLE}-2.c" "${BUNDLE}-3.c" "${BUNDLE}-4.c")
+add_executable(${BUNDLE} EXCLUDE_FROM_ALL "${BUNDLE}-1.c" "${BUNDLE}-2.c" "${BUNDLE}-3.c" "${BUNDLE}-4.c" "${BUNDLE}-5.c" "${BUNDLE}-6.c" "${BUNDLE}-7.c" "${BUNDLE}-8.c" "${BUNDLE}-9.c" "${BUNDLE}-10.c" "${BUNDLE}-11.c" "${BUNDLE}-12.c")
 add_dependencies(testdeps ${BUNDLE})
 target_link_libraries(${BUNDLE} ${LIB_SELECTED} ${CURL_LIBS})
 target_include_directories(${BUNDLE} PRIVATE
