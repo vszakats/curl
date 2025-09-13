@@ -76,6 +76,10 @@ for my $i (1..$batches) {
         print $out "\n";
     }
 
+    if($i == $batches) {
+        $files_per_batch = scalar @allsrc - $pos;
+    }
+
     for my $i (1..$files_per_batch) {
         my $src = $allsrc[$pos++];
         if($src =~ /([a-z0-9_]+)\.c$/) {
