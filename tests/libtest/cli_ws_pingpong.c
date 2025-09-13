@@ -52,7 +52,7 @@ static CURLcode pingpong(CURL *curl, const char *payload)
 
 #endif
 
-static CURLcode test_cli_ws_pingpong(const char *URL)
+CURLcode test_cli_ws_pingpong(const char *URL)
 {
 #ifndef CURL_DISABLE_WEBSOCKETS
   CURL *curl;

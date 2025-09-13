@@ -26,15 +26,15 @@
 curl_transform_makefile_inc("Makefile.inc" "${CMAKE_CURRENT_BINARY_DIR}/Makefile.inc.cmake")
 include("${CMAKE_CURRENT_BINARY_DIR}/Makefile.inc.cmake")
 
-add_custom_command(OUTPUT "${BUNDLE}.c"
+add_custom_command(OUTPUT "${BUNDLE}-1.c"
   COMMAND ${PERL_EXECUTABLE} "${PROJECT_SOURCE_DIR}/scripts/mk-unity.pl"
-    --include ${UTILS_C} ${CURLX_C} --test ${TESTS_C} > "${BUNDLE}.c"
+    --include ${UTILS_C} ${CURLX_C} --test ${TESTS_C} --batch=1 --outprefix=${BUNDLE}-N.c
   DEPENDS
     "${PROJECT_SOURCE_DIR}/scripts/mk-unity.pl" "${CMAKE_CURRENT_SOURCE_DIR}/Makefile.inc"
     ${FIRST_C} ${UTILS_C} ${CURLX_C} ${TESTS_C}
   VERBATIM)
 
-add_executable(${BUNDLE} EXCLUDE_FROM_ALL "${BUNDLE}.c")
+add_executable(${BUNDLE} EXCLUDE_FROM_ALL "${BUNDLE}-1.c")
 add_dependencies(testdeps ${BUNDLE})
 target_link_libraries(${BUNDLE} ${CURL_NETWORK_AND_TIME_LIBS})
 target_include_directories(${BUNDLE} PRIVATE

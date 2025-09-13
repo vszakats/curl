@@ -349,7 +349,7 @@ static bool bad_neg(int check)
    non-existing function return code back */
 #define present(x) ((x != CURLE_NOT_BUILT_IN) && (x != CURLE_UNKNOWN_OPTION))
 
-static CURLcode test_lib1521(const char *URL)
+CURLcode test_lib1521(const char *URL)
 {
   CURL *curl = NULL;
   CURL *dep = NULL;

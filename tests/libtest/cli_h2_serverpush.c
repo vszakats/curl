@@ -104,7 +104,7 @@ static int server_push_callback(CURL *parent,
 /*
  * Download a file over HTTP/2, take care of server push.
  */
-static CURLcode test_cli_h2_serverpush(const char *URL)
+CURLcode test_cli_h2_serverpush(const char *URL)
 {
   CURL *curl = NULL;
   CURLM *multi;
