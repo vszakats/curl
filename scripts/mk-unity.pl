@@ -52,6 +52,8 @@ my $files_per_batch = int(scalar @allsrc / $batches);
 
 my $pos = 0;
 
+print @include, "\n";
+
 for my $i (1..$batches) {
 
     my $outfn = $outprefix;
@@ -61,15 +63,18 @@ for my $i (1..$batches) {
     print $out "/* !checksrc! disable COPYRIGHT all */\n\n";
 
     my $tlist = "";
-    if(scalar @test && $i == 1) {
+    if(scalar @test) {
         print $out "#include \"first.h\"\n\n";
-
-        foreach my $src (@allsrc) {
-            if($src =~ /([a-z0-9_]+)\.c$/) {
-                my $name = $1;
-                if(not exists $include{$src}) {  # register test entry function
-                    $tlist .= "  {\"$name\", test_$name},\n";
-                    print $out "CURLcode test_$name(const char *arg);\n"
+        if($i == 1) {
+            foreach my $src (@allsrc) {
+                if($src =~ /([a-z0-9_]+)\.c$/) {
+                    my $name = $1;
+                    if(not exists $include{$src}) {  # register test entry function
+                        $tlist .= "  {\"$name\", test_$name},\n";
+                        if($batches > 1) {
+                            print $out "extern CURLcode test_$name(const char *arg);\n";
+                        }
+                    }
                 }
             }
         }
@@ -80,10 +85,15 @@ for my $i (1..$batches) {
         $files_per_batch = scalar @allsrc - $pos;
     }
 
-    for my $i (1..$files_per_batch) {
+    for my $j (1..$files_per_batch) {
         my $src = $allsrc[$pos++];
         if($src =~ /([a-z0-9_]+)\.c$/) {
             my $name = $1;
+            if($i > 1) {
+                if(not exists $include{$src}) {
+                    print $out "extern CURLcode test_$name(const char *arg);\n";
+                }
+            }
             print $out "#include \"$src\"\n";
         }
     }
