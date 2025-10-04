@@ -66,7 +66,6 @@
 #include "../curlx/strparse.h"
 #include "../strdup.h"
 #include "../strerror.h"
-#include "../curl_printf.h"
 #include "apple.h"
 
 #include <openssl/ssl.h>
@@ -274,7 +273,7 @@ static CURLcode pubkey_show(struct Curl_easy *data,
 {
   char namebuf[32];
 
-  msnprintf(namebuf, sizeof(namebuf), "%s(%s)", type, name);
+  curl_msnprintf(namebuf, sizeof(namebuf), "%s(%s)", type, name);
 
   if(bn)
     BN_print(mem, bn);
@@ -2801,7 +2800,7 @@ static void ossl_trace(int direction, int ssl_ver, int content_type,
   case 0:
     break;
   default:
-    msnprintf(unknown, sizeof(unknown), "(%x)", ssl_ver);
+    curl_msnprintf(unknown, sizeof(unknown), "(%x)", ssl_ver);
     verstr = unknown;
     break;
   }
@@ -2848,10 +2847,10 @@ static void ossl_trace(int direction, int ssl_ver, int content_type,
       msg_name = ssl_msg_type(ssl_ver, msg_type);
     }
 
-    txt_len = msnprintf(ssl_buf, sizeof(ssl_buf),
-                        "%s (%s), %s, %s (%d):\n",
-                        verstr, direction ? "OUT" : "IN",
-                        tls_rt_name, msg_name, msg_type);
+    txt_len = curl_msnprintf(ssl_buf, sizeof(ssl_buf),
+                             "%s (%s), %s, %s (%d):\n",
+                             verstr, direction ? "OUT" : "IN",
+                             tls_rt_name, msg_name, msg_type);
     Curl_debug(data, CURLINFO_TEXT, ssl_buf, (size_t)txt_len);
   }
 
@@ -4864,7 +4863,8 @@ static void infof_certstack(struct Curl_easy *data, const SSL *ssl)
       char group_name[80] = "";
       get_group_name = EVP_PKEY_get_group_name(current_pkey, group_name,
                                                sizeof(group_name), NULL);
-      msnprintf(group_name_final, sizeof(group_name_final), "/%s", group_name);
+      curl_msnprintf(group_name_final, sizeof(group_name_final), "/%s",
+                     group_name);
     }
     type_name = current_pkey ? EVP_PKEY_get0_type_name(current_pkey) : NULL;
 #else
@@ -5276,8 +5276,8 @@ static CURLcode ossl_send_earlydata(struct Curl_cfilter *cf,
         else if(sockerr)
           Curl_strerror(sockerr, error_buffer, sizeof(error_buffer));
         else
-          msnprintf(error_buffer, sizeof(error_buffer), "%s",
-                    SSL_ERROR_to_str(err));
+          curl_msnprintf(error_buffer, sizeof(error_buffer), "%s",
+                         SSL_ERROR_to_str(err));
 
         failf(data, OSSL_PACKAGE " SSL_write:early_data: %s, errno %d",
               error_buffer, sockerr);
@@ -5462,8 +5462,8 @@ static CURLcode ossl_send(struct Curl_cfilter *cf,
       else if(sockerr)
         Curl_strerror(sockerr, error_buffer, sizeof(error_buffer));
       else
-        msnprintf(error_buffer, sizeof(error_buffer), "%s",
-                  SSL_ERROR_to_str(err));
+        curl_msnprintf(error_buffer, sizeof(error_buffer), "%s",
+                       SSL_ERROR_to_str(err));
 
       failf(data, OSSL_PACKAGE " SSL_write: %s, errno %d",
             error_buffer, sockerr);
@@ -5559,8 +5559,8 @@ static CURLcode ossl_recv(struct Curl_cfilter *cf,
         else if(sockerr && err == SSL_ERROR_SYSCALL)
           Curl_strerror(sockerr, error_buffer, sizeof(error_buffer));
         else
-          msnprintf(error_buffer, sizeof(error_buffer), "%s",
-                    SSL_ERROR_to_str(err));
+          curl_msnprintf(error_buffer, sizeof(error_buffer), "%s",
+                         SSL_ERROR_to_str(err));
         failf(data, OSSL_PACKAGE " SSL_read: %s, errno %d",
               error_buffer, sockerr);
         result = CURLE_RECV_ERROR;
@@ -5582,8 +5582,8 @@ static CURLcode ossl_recv(struct Curl_cfilter *cf,
           if(sockerr)
             Curl_strerror(sockerr, error_buffer, sizeof(error_buffer));
           else {
-            msnprintf(error_buffer, sizeof(error_buffer),
-                      "Connection closed abruptly");
+            curl_msnprintf(error_buffer, sizeof(error_buffer),
+                           "Connection closed abruptly");
           }
           failf(data, OSSL_PACKAGE " SSL_read: %s, errno %d",
                 error_buffer, sockerr);
@@ -5703,7 +5703,7 @@ size_t Curl_ossl_version(char *buffer, size_t size)
   if(curl_strnequal(ver, expected, sizeof(expected) - 1)) {
     ver += sizeof(expected) - 1;
   }
-  count = msnprintf(buffer, size, "%s/%s", OSSL_PACKAGE, ver);
+  count = curl_msnprintf(buffer, size, "%s/%s", OSSL_PACKAGE, ver);
   for(p = buffer; *p; ++p) {
     if(ISBLANK(*p))
       *p = '_';
@@ -5711,17 +5711,17 @@ size_t Curl_ossl_version(char *buffer, size_t size)
   return count;
 #elif defined(OPENSSL_IS_BORINGSSL)
 #ifdef CURL_BORINGSSL_VERSION
-  return msnprintf(buffer, size, "%s/%s",
-                   OSSL_PACKAGE, CURL_BORINGSSL_VERSION);
+  return curl_msnprintf(buffer, size, "%s/%s",
+                        OSSL_PACKAGE, CURL_BORINGSSL_VERSION);
 #else
-  return msnprintf(buffer, size, OSSL_PACKAGE);
+  return curl_msnprintf(buffer, size, OSSL_PACKAGE);
 #endif
 #elif defined(OPENSSL_IS_AWSLC)
-  return msnprintf(buffer, size, "%s/%s",
-                   OSSL_PACKAGE, AWSLC_VERSION_NUMBER_STRING);
+  return curl_msnprintf(buffer, size, "%s/%s",
+                        OSSL_PACKAGE, AWSLC_VERSION_NUMBER_STRING);
 #elif defined(OPENSSL_VERSION_STRING)  /* OpenSSL 3+ */
-  return msnprintf(buffer, size, "%s/%s",
-                   OSSL_PACKAGE, OpenSSL_version(OPENSSL_VERSION_STRING));
+  return curl_msnprintf(buffer, size, "%s/%s",
+                        OSSL_PACKAGE, OpenSSL_version(OPENSSL_VERSION_STRING));
 #else
   /* not LibreSSL, BoringSSL and not using OpenSSL_version */
 
@@ -5744,16 +5744,16 @@ size_t Curl_ossl_version(char *buffer, size_t size)
   else
     sub[0]='\0';
 
-  return msnprintf(buffer, size, "%s/%lx.%lx.%lx%s"
+  return curl_msnprintf(buffer, size, "%s/%lx.%lx.%lx%s"
 #ifdef OPENSSL_FIPS
-                   "-fips"
+                        "-fips"
 #endif
-                   ,
-                   OSSL_PACKAGE,
-                   (ssleay_value >> 28) & 0xf,
-                   (ssleay_value >> 20) & 0xff,
-                   (ssleay_value >> 12) & 0xff,
-                   sub);
+                        ,
+                        OSSL_PACKAGE,
+                        (ssleay_value >> 28) & 0xf,
+                        (ssleay_value >> 20) & 0xff,
+                        (ssleay_value >> 12) & 0xff,
+                        sub);
 #endif
 }
 
