@@ -130,7 +130,7 @@ static void *t586_test_fire(void *ptr)
 }
 
 /* test function */
-static CURLcode test_lib586(const char *URL)
+CURLcode test_lib586(const char *URL)
 {
   CURLcode res = CURLE_OK;
   CURLSHcode scode = CURLSHE_OK;

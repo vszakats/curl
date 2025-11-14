@@ -122,7 +122,7 @@ static CURLcode perform_and_check_connections(CURL *curl,
 }
 
 
-static CURLcode test_lib1533(const char *URL)
+CURLcode test_lib1533(const char *URL)
 {
   struct cb_data data;
   CURL *curl = NULL;

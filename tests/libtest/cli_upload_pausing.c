@@ -83,7 +83,7 @@ static void usage_upload_pausing(const char *msg)
   );
 }
 
-static CURLcode test_cli_upload_pausing(const char *URL)
+CURLcode test_cli_upload_pausing(const char *URL)
 {
   CURL *curl = NULL;
   CURLcode res = CURLE_OK;

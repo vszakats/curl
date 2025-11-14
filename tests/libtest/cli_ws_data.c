@@ -408,7 +408,7 @@ static void test_ws_data_usage(const char *msg)
 
 #endif
 
-static CURLcode test_cli_ws_data(const char *URL)
+CURLcode test_cli_ws_data(const char *URL)
 {
 #ifndef CURL_DISABLE_WEBSOCKETS
   CURLcode res = CURLE_OK;

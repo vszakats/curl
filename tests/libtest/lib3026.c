@@ -37,7 +37,7 @@ static DWORD WINAPI t3026_run_thread(void *ptr)
   return 0;
 }
 
-static CURLcode test_lib3026(const char *URL)
+CURLcode test_lib3026(const char *URL)
 {
   CURLcode results[NUM_THREADS];
   HANDLE thread_handles[NUM_THREADS];
@@ -98,7 +98,7 @@ static void *t3026_run_thread(void *ptr)
   return NULL;
 }
 
-static CURLcode test_lib3026(const char *URL)
+CURLcode test_lib3026(const char *URL)
 {
   CURLcode results[NUM_THREADS];
   pthread_t tids[NUM_THREADS];
@@ -143,7 +143,7 @@ cleanup:
 }
 
 #else /* without pthread or Windows, this test doesn't work */
-static CURLcode test_lib3026(const char *URL)
+CURLcode test_lib3026(const char *URL)
 {
   curl_version_info_data *ver;
   (void)URL;

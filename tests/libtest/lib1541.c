@@ -106,7 +106,7 @@ static size_t t1541_write_cb(char *ptr, size_t size, size_t nmemb, void *userp)
   return size * nmemb;
 }
 
-static CURLcode test_lib1541(const char *URL)
+CURLcode test_lib1541(const char *URL)
 {
   CURL *curl = NULL;
   CURLcode res = CURLE_OK;

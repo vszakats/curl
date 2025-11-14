@@ -27,7 +27,7 @@
 
 /* Test CURLINFO_RESPONSE_CODE */
 
-static CURLcode test_lib1532(const char *URL)
+CURLcode test_lib1532(const char *URL)
 {
   CURL *curl;
   long httpcode;

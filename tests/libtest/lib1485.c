@@ -85,7 +85,7 @@ static size_t t1485_write_cb(char *ptr, size_t size, size_t nmemb, void *userp)
   return len;
 }
 
-static CURLcode test_lib1485(const char *URL)
+CURLcode test_lib1485(const char *URL)
 {
   CURL *curl = NULL;
   CURLcode res = CURLE_OK;

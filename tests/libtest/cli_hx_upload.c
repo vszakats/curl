@@ -225,7 +225,7 @@ static void usage_hx_upload(const char *msg)
 /*
  * Download a file over HTTP/2, take care of server push.
  */
-static CURLcode test_cli_hx_upload(const char *URL)
+CURLcode test_cli_hx_upload(const char *URL)
 {
   CURLM *multi;
   CURLSH *share;

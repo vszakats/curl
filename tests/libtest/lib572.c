@@ -29,7 +29,7 @@
 /*
  * Test GET_PARAMETER: PUT, HEARTBEAT, and POST
  */
-static CURLcode test_lib572(const char *URL)
+CURLcode test_lib572(const char *URL)
 {
   CURLcode res;
   CURL *curl;

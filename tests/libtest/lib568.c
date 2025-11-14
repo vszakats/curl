@@ -29,7 +29,7 @@
 /*
  * Test the Client->Server ANNOUNCE functionality (PUT style)
  */
-static CURLcode test_lib568(const char *URL)
+CURLcode test_lib568(const char *URL)
 {
   CURLcode res;
   CURL *curl;
