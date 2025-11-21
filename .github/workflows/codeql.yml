@@ -67,7 +67,7 @@ jobs:
 
       - name: 'build'
         run: |
-          cmake -B . -G Ninja -DENABLE_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug
+          cmake -B . -G Ninja -DENABLE_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS=-DCURL_DISABLE_TYPECHECK
           cmake --build . --verbose --target testdeps
           src/curl -V
 
