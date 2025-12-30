@@ -635,11 +635,15 @@ static CURLcode post_per_transfer(struct per_transfer *per,
   }
   else
 #endif
-    if(!config->synthetic_error && result &&
+    if(!config->synthetic_error && (result || config->tresult) &&
        (!global->silent || global->showerror)) {
       const char *msg = per->errorbuffer;
-      curl_mfprintf(tool_stderr, "curl: (%d) %s\n", result,
-                    msg[0] ? msg : curl_easy_strerror(result));
+      if(config->tresult)
+        curl_mfprintf(tool_stderr, "curl: (%d) %s\n", config->tresult,
+                      msg[0] ? msg : tool_strerror(config->tresult));
+      else
+        curl_mfprintf(tool_stderr, "curl: (%d) %s\n", result,
+                      msg[0] ? msg : curl_easy_strerror(result));
       if(result == CURLE_PEER_FAILED_VERIFICATION)
         fputs(CURL_CA_CERT_ERRORMSG, tool_stderr);
     }
@@ -982,8 +986,12 @@ static CURLcode setup_outfile(struct OperationConfig *config,
 
   if(!per->outfile) {
     /* extract the filename from the URL */
-    CURLcode result = get_url_file_name(&per->outfile, per->url);
-    if(result) {
+    CURLcode result = get_url_file_name(config, &per->outfile, per->url);
+    if(config->tresult == CURLTE_BAD_FILENAME) {
+      errorf("bad output filename");
+      return result;
+    }
+    else if(result) {
       errorf("Failed to extract a filename"
              " from the URL to use for storage");
       return result;
@@ -993,9 +1001,9 @@ static CURLcode setup_outfile(struct OperationConfig *config,
     /* fill '#1' ... '#9' terms from URL pattern */
     char *storefile = per->outfile;
     CURLcode result =
-      glob_match_url(&per->outfile, storefile, &state->urlglob);
+      glob_match_url(config, &per->outfile, storefile, &state->urlglob);
     tool_safefree(storefile);
-    if(result == CURLE_BAD_FILENAME) {
+    if(config->tresult == CURLTE_BAD_FILENAME) {
       warnf("bad output filename");
       return result;
     }

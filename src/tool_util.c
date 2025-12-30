@@ -125,3 +125,19 @@ FILE *tool_execpath(const char *filename, char **pathp)
   return NULL;
 }
 #endif
+
+const char *tool_strerror(CURLtcode error)
+{
+  switch(error) {
+  case CURLTE_OK:
+    return "No tool error";
+
+  case CURLTE_BAD_FILENAME:
+    return "Filename failed sanitization";
+
+  default:
+    break;
+  }
+
+  return "Unknown tool error";
+}

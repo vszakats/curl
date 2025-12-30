@@ -106,4 +106,11 @@ int tool_ftruncate64(int fd, curl_off_t where);
 #endif /* !HAVE_FTRUNCATE */
 #endif /* _WIN32 */
 
+/* CURLtcode errors specific to tool */
+typedef enum {
+  CURLTE_OK,                  /* 0 */
+  CURLTE_BAD_FILENAME = 900,
+  CURLTE_LAST                 /* never use! */
+} CURLtcode;
+
 #endif /* HEADER_CURL_TOOL_SETUP_H */

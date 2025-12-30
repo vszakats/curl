@@ -38,4 +38,6 @@ int struplocompare4sort(const void *p1, const void *p2);
 FILE *tool_execpath(const char *filename, char **pathp);
 #endif
 
+const char *tool_strerror(CURLtcode error);
+
 #endif /* HEADER_CURL_TOOL_UTIL_H */

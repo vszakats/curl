@@ -172,11 +172,14 @@ fail:
  * Returns a pointer to a heap-allocated string or NULL if
  * no name part, at location indicated by first argument.
  */
-CURLcode get_url_file_name(char **filename, const char *url)
+CURLcode get_url_file_name(struct OperationConfig *config, char **filename,
+                           const char *url)
 {
   CURLU *uh = curl_url();
   char *path = NULL;
   CURLUcode uerr;
+
+  config->tresult = CURLTE_OK;
 
   if(!uh)
     return CURLE_OUT_OF_MEMORY;
@@ -225,7 +228,8 @@ CURLcode get_url_file_name(char **filename, const char *url)
         if(sc) {
           if(sc == SANITIZE_ERR_OUT_OF_MEMORY)
             return CURLE_OUT_OF_MEMORY;
-          return CURLE_BAD_FILENAME;
+          config->tresult = CURLTE_BAD_FILENAME;
+          return CURLE_OK;
         }
         *filename = sanitized;
       }
