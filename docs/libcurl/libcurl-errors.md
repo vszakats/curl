@@ -490,6 +490,10 @@ A value or data field grew larger than allowed.
 
 ECH was attempted but failed.
 
+## CURLE_BAD_FILENAME (102)
+
+Filename failed sanitization.
+
 # CURLMcode
 
 This is the generic return code used by functions in the libcurl multi

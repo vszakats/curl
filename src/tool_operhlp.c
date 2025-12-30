@@ -225,7 +225,7 @@ CURLcode get_url_file_name(char **filename, const char *url)
         if(sc) {
           if(sc == SANITIZE_ERR_OUT_OF_MEMORY)
             return CURLE_OUT_OF_MEMORY;
-          return CURLE_URL_MALFORMAT;
+          return CURLE_BAD_FILENAME;
         }
         *filename = sanitized;
       }

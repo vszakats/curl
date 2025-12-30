@@ -995,7 +995,11 @@ static CURLcode setup_outfile(struct OperationConfig *config,
     CURLcode result =
       glob_match_url(&per->outfile, storefile, &state->urlglob);
     tool_safefree(storefile);
-    if(result) {
+    if(result == CURLE_BAD_FILENAME) {
+      warnf("bad output filename");
+      return result;
+    }
+    else if(result) {
       /* bad globbing */
       warnf("bad output glob");
       return result;
