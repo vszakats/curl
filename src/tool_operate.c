@@ -983,7 +983,11 @@ static CURLcode setup_outfile(struct OperationConfig *config,
   if(!per->outfile) {
     /* extract the filename from the URL */
     CURLcode result = get_url_file_name(&per->outfile, per->url);
-    if(result) {
+    if(result == CURLE_BAD_FILENAME) {
+      errorf("bad output filename");
+      return result;
+    }
+    else if(result) {
       errorf("Failed to extract a filename"
              " from the URL to use for storage");
       return result;
