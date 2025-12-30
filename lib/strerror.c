@@ -297,9 +297,6 @@ const char *curl_easy_strerror(CURLcode error)
   case CURLE_ECH_REQUIRED:
     return "ECH attempted but failed";
 
-  case CURLE_BAD_FILENAME:
-    return "Filename failed sanitization";
-
     /* error codes not used by current libcurl */
   default:
     break;

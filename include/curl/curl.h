@@ -644,8 +644,6 @@ typedef enum {
   CURLE_UNRECOVERABLE_POLL,      /* 99 - poll/select returned fatal error */
   CURLE_TOO_LARGE,               /* 100 - a value/data met its maximum */
   CURLE_ECH_REQUIRED,            /* 101 - ECH tried but failed */
-  CURLE_BAD_FILENAME,            /* 102 - filename failed sanitization
-                                    (Added in 8.18.0) */
   CURL_LAST /* never use! */
 } CURLcode;
 
