@@ -1002,10 +1002,11 @@ static CURLcode setup_outfile(struct OperationConfig *config,
   else if(glob_inuse(&state->urlglob)) {
     /* fill '#1' ... '#9' terms from URL pattern */
     char *storefile = per->outfile;
-    CURLcode result =
-      glob_match_url(config, &per->outfile, storefile, &state->urlglob);
+    bool sanitize_ok;
+    CURLcode result = glob_match_url(config, &per->outfile, storefile,
+                                     &state->urlglob, &sanitize_ok);
     tool_safefree(storefile);
-    if(config->tresult == CURLTE_BAD_FILENAME) {
+    if(!sanitize_ok) {
       warnf("bad output filename");
       return result;
     }
