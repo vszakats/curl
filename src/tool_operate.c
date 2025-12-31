@@ -635,7 +635,7 @@ static CURLcode post_per_transfer(struct per_transfer *per,
   }
   else
 #endif
-    if(!config->synthetic_error && (result || config->tresult) &&
+    if(!config->synthetic_error && result &&
        (!global->silent || global->showerror)) {
       const char *msg = per->errorbuffer;
       if(config->tresult)
