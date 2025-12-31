@@ -57,6 +57,13 @@ struct State {
 #define FAIL_WITH_BODY 1
 #define FAIL_WO_BODY   2
 
+/* CURLtcode errors specific to tool */
+typedef enum {
+  CURLTE_OK,                  /* 0 */
+  CURLTE_BAD_FILENAME = 900,
+  CURLTE_LAST                 /* never use! */
+} CURLtcode;
+
 struct OperationConfig {
   struct dynbuf postdata;
   char *useragent;
