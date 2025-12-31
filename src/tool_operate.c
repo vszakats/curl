@@ -638,12 +638,11 @@ static CURLcode post_per_transfer(struct per_transfer *per,
     if(!config->synthetic_error && result &&
        (!global->silent || global->showerror)) {
       const char *msg = per->errorbuffer;
-      if(config->tresult)
-        curl_mfprintf(tool_stderr, "curl: (%d) %s\n", config->tresult,
-                      msg[0] ? msg : tool_strerror(config->tresult));
-      else
-        curl_mfprintf(tool_stderr, "curl: (%d) %s\n", result,
-                      msg[0] ? msg : curl_easy_strerror(result));
+      curl_mfprintf(tool_stderr, "curl: (%d) %s\n",
+                    config->tresult ? config->tresult : result,
+                    msg[0] ? msg
+                           : (config->tresult ? tool_strerror(config->tresult)
+                                              : curl_easy_strerror(result)));
       if(result == CURLE_PEER_FAILED_VERIFICATION)
         fputs(CURL_CA_CERT_ERRORMSG, tool_stderr);
     }
