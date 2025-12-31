@@ -121,6 +121,22 @@ static bool is_fatal_error(CURLcode code)
   return FALSE;
 }
 
+static const char *tool_strerror(CURLtcode error)
+{
+  switch(error) {
+  case CURLTE_OK:
+    return "No error (tool)";
+
+  case CURLTE_BAD_FILENAME:
+    return "Filename failed sanitization";
+
+  default:
+    break;
+  }
+
+  return "Unknown error (tool)";
+}
+
 /*
  * Check if a given string is a PKCS#11 URI
  */
