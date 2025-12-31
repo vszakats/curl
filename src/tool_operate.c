@@ -638,9 +638,11 @@ static CURLcode post_per_transfer(struct per_transfer *per,
     if(!config->synthetic_error && result &&
        (!global->silent || global->showerror)) {
       const char *msg = per->errorbuffer;
-      if(config->tresult)
+      if(config->tresult) {
         curl_mfprintf(tool_stderr, "curl: (%d) %s\n", config->tresult,
                       msg[0] ? msg : tool_strerror(config->tresult));
+        config->tresult = CURLTE_OK;
+      }
       else
         curl_mfprintf(tool_stderr, "curl: (%d) %s\n", result,
                       msg[0] ? msg : curl_easy_strerror(result));
