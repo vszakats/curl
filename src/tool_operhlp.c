@@ -229,7 +229,7 @@ CURLcode get_url_file_name(struct OperationConfig *config, char **filename,
           if(sc == SANITIZE_ERR_OUT_OF_MEMORY)
             return CURLE_OUT_OF_MEMORY;
           config->tresult = CURLTE_BAD_FILENAME;
-          return CURLE_OK;
+          return CURLE_BAD_FUNCTION_ARGUMENT;
         }
         *filename = sanitized;
       }
