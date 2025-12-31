@@ -708,9 +708,9 @@ CURLcode glob_match_url(struct OperationConfig *config,
                                           SANITIZE_ALLOW_RESERVED));
     curlx_dyn_free(&dyn);
     if(sc) {
+      config->tresult = CURLTE_BAD_FILENAME;
       if(sc == SANITIZE_ERR_OUT_OF_MEMORY)
         return CURLE_OUT_OF_MEMORY;
-      config->tresult = CURLTE_BAD_FILENAME;
       return CURLE_BAD_FUNCTION_ARGUMENT;
     }
     *output = sanitized;
