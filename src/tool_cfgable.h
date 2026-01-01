@@ -57,13 +57,6 @@ struct State {
 #define FAIL_WITH_BODY 1
 #define FAIL_WO_BODY   2
 
-/* CURLtcode errors specific to tool */
-typedef enum {
-  CURLTE_OK,                  /* 0 */
-  CURLTE_BAD_FILENAME = 900,
-  CURLTE_LAST                 /* never use! */
-} CURLtcode;
-
 struct OperationConfig {
   struct dynbuf postdata;
   char *useragent;
@@ -225,7 +218,7 @@ struct OperationConfig {
     CLOBBER_NEVER, /* If the file exists, always fail */
     CLOBBER_ALWAYS /* If the file exists, always overwrite it */
   } file_clobber_mode;
-  CURLtcode tresult;
+  CURLTcode tresult;
   unsigned char upload_flags; /* Bitmask for --upload-flags */
   unsigned short porttouse;
   unsigned char ssl_version;     /* 0 - 4, 0 being default */

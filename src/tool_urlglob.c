@@ -636,15 +636,12 @@ CURLcode glob_next_url(char **globbed, struct URLGlob *glob)
 
 #define MAX_OUTPUT_GLOB_LENGTH (1024 * 1024)
 
-CURLcode glob_match_url(struct OperationConfig *config,
-                        char **output, const char *filename,
-                        struct URLGlob *glob, bool *sanitize_ok)
+CURLcode glob_match_url(char **output, const char *filename,
+                        struct URLGlob *glob, CURLTcode *sanitize)
 {
   struct dynbuf dyn;
   *output = NULL;
-
-  config->tresult = CURLTE_OK;
-  *sanitize_ok = TRUE;
+  *sanitize = CURLTE_OK;
 
   curlx_dyn_init(&dyn, MAX_OUTPUT_GLOB_LENGTH);
 
@@ -709,10 +706,11 @@ CURLcode glob_match_url(struct OperationConfig *config,
                                           SANITIZE_ALLOW_RESERVED));
     curlx_dyn_free(&dyn);
     if(sc) {
-      *sanitize_ok = FALSE;
-      if(sc == SANITIZE_ERR_OUT_OF_MEMORY)
+      if(sc == SANITIZE_ERR_OUT_OF_MEMORY) {
+        *sanitize = CURLTE_ERROR;
         return CURLE_OUT_OF_MEMORY;
-      config->tresult = CURLTE_BAD_FILENAME;
+      }
+      *sanitize = CURLTE_BAD_FILENAME;
       return CURLE_BAD_FUNCTION_ARGUMENT;
     }
     *output = sanitized;

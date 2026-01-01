@@ -121,7 +121,7 @@ static bool is_fatal_error(CURLcode code)
   return FALSE;
 }
 
-static const char *tool_strerror(CURLtcode error)
+static const char *tool_strerror(CURLTcode error)
 {
   switch(error) {
   case CURLTE_OK:
@@ -1003,10 +1003,14 @@ static CURLcode setup_outfile(struct OperationConfig *config,
   struct State *state = &global->state;
 
   if(!per->outfile) {
+    CURLTcode sanitize;
     /* extract the filename from the URL */
-    CURLcode result = get_url_file_name(config, &per->outfile, per->url);
-    if(config->tresult == CURLTE_BAD_FILENAME) {
-      errorf("bad output filename");
+    CURLcode result = get_url_file_name(&per->outfile, per->url, &sanitize);
+    if(sanitize) {
+      if(sanitize == CURLTE_BAD_FILENAME) {
+        config->tresult = sanitize;
+        errorf("bad output filename");
+      }
       return result;
     }
     else if(result) {
@@ -1018,12 +1022,15 @@ static CURLcode setup_outfile(struct OperationConfig *config,
   else if(glob_inuse(&state->urlglob)) {
     /* fill '#1' ... '#9' terms from URL pattern */
     char *storefile = per->outfile;
-    bool sanitize_ok;
-    CURLcode result = glob_match_url(config, &per->outfile, storefile,
-                                     &state->urlglob, &sanitize_ok);
+    CURLTcode sanitize;
+    CURLcode result = glob_match_url(&per->outfile, storefile,
+                                     &state->urlglob, &sanitize);
     tool_safefree(storefile);
-    if(!sanitize_ok) {
-      warnf("bad output filename");
+    if(sanitize) {
+      if(sanitize == CURLTE_BAD_FILENAME) {
+        config->tresult = sanitize;
+        warnf("bad output filename");
+      }
       return result;
     }
     else if(result) {

@@ -71,14 +71,11 @@ struct URLGlob {
   size_t pos;        /* column position of error or 0 */
 };
 
-struct OperationConfig;
-
 CURLcode glob_url(struct URLGlob *glob, const char *url, curl_off_t *urlnum,
                   FILE *error);
 CURLcode glob_next_url(char **globbed, struct URLGlob *glob);
-CURLcode glob_match_url(struct OperationConfig *config,
-                        char **output, const char *filename,
-                        struct URLGlob *glob, bool *sanitize_ok);
+CURLcode glob_match_url(char **output, const char *filename,
+                        struct URLGlob *glob, CURLTcode *sanitize);
 void glob_cleanup(struct URLGlob *glob);
 bool glob_inuse(struct URLGlob *glob);
 
