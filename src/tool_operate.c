@@ -1138,8 +1138,8 @@ static CURLcode single_transfer(struct OperationConfig *config,
                                 CURLSH *share, bool *added, bool *skipped)
 {
   CURLcode result = CURLE_OK;
-  bool orig_noprogress = global->noprogress;
-  bool orig_isatty = global->isatty;
+  bool orig_noprogress = (bool)global->noprogress;
+  bool orig_isatty = (bool)global->isatty;
   struct State *state = &global->state;
   char *httpgetfields = state->httpgetfields;
 
@@ -2145,8 +2145,8 @@ static CURLcode run_all_transfers(CURLSH *share,
                                   CURLcode result)
 {
   /* Save the values of noprogress and isatty to restore them later on */
-  bool orig_noprogress = global->noprogress;
-  bool orig_isatty = global->isatty;
+  bool orig_noprogress = (bool)global->noprogress;
+  bool orig_isatty = (bool)global->isatty;
   struct per_transfer *per;
 
   /* Time to actually do the transfers */
