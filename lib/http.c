@@ -1184,7 +1184,7 @@ static bool http_should_fail(struct Curl_easy *data, int httpcode)
     return TRUE;
 #endif
 
-  return data->state.authproblem;
+  return (bool)data->state.authproblem;
 }
 
 static void http_switch_to_get(struct Curl_easy *data, int code)

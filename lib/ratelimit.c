@@ -73,7 +73,7 @@ bool Curl_rlimit_active(struct Curl_rlimit *r)
 
 bool Curl_rlimit_is_blocked(struct Curl_rlimit *r)
 {
-  return r->blocked;
+  return (bool)r->blocked;
 }
 
 static void ratelimit_update(struct Curl_rlimit *r,
