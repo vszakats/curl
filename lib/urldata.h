@@ -728,8 +728,8 @@ struct connectdata {
   /* HTTP version last responded with by the server or negotiated via ALPN.
    * 0 at start, then one of 09, 10, 11, etc. */
   unsigned char httpversion_seen;
-  unsigned char connect_only;
   unsigned char gssapi_delegation; /* inherited from set.gssapi_delegation */
+  BIT(connect_only);
 };
 
 #ifndef CURL_DISABLE_PROXY
