@@ -391,11 +391,11 @@ connect_sub_chain:
 
     if(result) {
       /* 'dest' might be freed now so it can't be dereferenced */
-      CURL_TRC_CF(data, cf, "added SOCKS filter failed -> %d", result);
+      CURL_TRC_CF(data, cf, "added SOCKS filter failed -> %d", (int)result);
       return result;
     }
     CURL_TRC_CF(data, cf, "added SOCKS filter to %s:%u -> %d",
-                dest->hostname, dest->port, result);
+                dest->hostname, dest->port, (int)result);
     ctx->state = CF_SETUP_CNNCT_SOCKS;
     if(!cf->next || !cf->next->connected)
       goto connect_sub_chain;
