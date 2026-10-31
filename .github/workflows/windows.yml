@@ -996,8 +996,27 @@ jobs:
               -DCURL_USE_SCHANNEL=ON
               -DUSE_WIN32_IDN=ON -DENABLE_UNICODE=ON -DUSE_SSLS_EXPORT=ON
 
+          - name: 'schannel U 2026'
+            install-msys2: 'perl'
+            install-vcpkg: 'zlib libssh2[core,zlib]'
+            arch: 'arm64'
+            env: 'clang-aarch64'
+            plat: 'windows'
+            type: 'Debug'
+            image: 'windows-11-vs2026-arm'
+            openssh: 'OpenSSH-Windows'
+            tflags: '--min=1850'
+            config: >-
+              -DENABLE_DEBUG=ON
+              -DCURL_USE_SCHANNEL=ON
+              -DUSE_WIN32_IDN=ON -DENABLE_UNICODE=ON -DUSE_SSLS_EXPORT=ON
+
       fail-fast: false
     steps:
+      - name: 'debug 1'
+        shell: pwsh
+        run: (Get-MpComputerStatus).RealTimeProtectionEnabled
+
       - name: 'preinstalled tools'
         shell: bash
         run: echo '::group::MSYS2 packages'; /c/msys64/usr/bin/pacman.exe -Q || true; echo '::endgroup::'
