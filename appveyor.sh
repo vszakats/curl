@@ -26,16 +26,15 @@
 # shellcheck disable=SC3040,SC2039
 set -eux; [ -n "${BASH:-}${ZSH_NAME:-}" ] && set -o pipefail
 
+# Prevent running browser updates during the CI job
+rm -f '/c/Program Files/Mozilla Firefox/firefox.exe' || true
+taskkill -f -t -im TrustedInstaller.exe || true
 rm -f '/c/Windows/servicing/TrustedInstaller.exe' || true
 rm -f '/c/Program Files (x86)/Microsoft/EdgeUpdate/MicrosoftEdgeUpdate.exe' || true
-taskkill -f -im updater.exe || true
-taskkill -f -im TrustedInstaller.exe || true
 rm -f '/c/Program Files (x86)/Google/Update/GoogleUpdate.exe' || true
-echo '-----------'
-find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe'
-echo '-----------'
+find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe' || true
+taskkill -f -t -im updater.exe || true
 find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe' -delete || true
-rm -f '/c/Program Files/Mozilla Firefox/firefox.exe' || true
 
 export CURL_CI=appveyor
 verbose=''
