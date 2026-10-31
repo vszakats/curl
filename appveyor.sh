@@ -27,18 +27,18 @@
 set -eux; [ -n "${BASH:-}${ZSH_NAME:-}" ] && set -o pipefail
 
 # Prevent running browser updates during the CI job
-# Windows 2019
 rm -f '/c/Program Files/Mozilla Firefox/firefox.exe' || true
 taskkill -f -t -im TrustedInstaller.exe || true
 rm -f '/c/Windows/servicing/TrustedInstaller.exe' || true
+find '/c/Program Files (x86)/Microsoft/EdgeUpdate' -name 'MicrosoftEdgeUpdate.exe' || true
 taskkill -f -t -im MicrosoftEdgeUpdate.exe || true
-rm -f '/c/Program Files (x86)/Microsoft/EdgeUpdate/MicrosoftEdgeUpdate.exe' || true
+find '/c/Program Files (x86)/Microsoft/EdgeUpdate' -name 'MicrosoftEdgeUpdate.exe' -delete || true
 taskkill -f -t -im GoogleUpdate.exe || true
 rm -f '/c/Program Files (x86)/Google/Update/GoogleUpdate.exe' || true
 find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe' || true
 taskkill -f -t -im updater.exe || true
 find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe' -delete || true
-# Windows 2012
+# Older versions
 find '/c/Program Files (x86)/Google/Update' -name 'GoogleUpdate*.exe' || true
 taskkill -f -t -im updater.exe || true
 find '/c/Program Files (x86)/Google/Update' -name 'GoogleUpdate*.exe' -delete || true
