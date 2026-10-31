@@ -998,6 +998,14 @@ jobs:
 
       fail-fast: false
     steps:
+      - name: 'debug 1'
+        shell: pwsh
+        run: (Get-MpComputerStatus).RealTimeProtectionEnabled
+
+      - name: 'debug 2'
+        shell: bash
+        run: tasklist -v | sort
+
       - name: 'preinstalled tools'
         shell: bash
         run: echo '::group::MSYS2 packages'; /c/msys64/usr/bin/pacman.exe -Q || true; echo '::endgroup::'
