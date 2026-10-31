@@ -40,7 +40,7 @@ taskkill -f -t -im updater.exe || true
 find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe' -delete || true
 # Older versions
 find '/c/Program Files (x86)/Google/Update' -name 'GoogleUpdate*.exe' || true
-taskkill -f -t -im updater.exe || true
+taskkill -f -t -im GoogleUpdate.exe || true
 find '/c/Program Files (x86)/Google/Update' -name 'GoogleUpdate*.exe' -delete || true
 
 export CURL_CI=appveyor
