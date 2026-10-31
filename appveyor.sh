@@ -26,23 +26,6 @@
 # shellcheck disable=SC3040,SC2039
 set -eux; [ -n "${BASH:-}${ZSH_NAME:-}" ] && set -o pipefail
 
-# Prevent running browser updates during the CI job
-rm -f '/c/Program Files/Mozilla Firefox/firefox.exe' || true
-taskkill -f -t -im TrustedInstaller.exe || true
-rm -f '/c/Windows/servicing/TrustedInstaller.exe' || true
-find '/c/Program Files (x86)/Microsoft/EdgeUpdate' -name 'MicrosoftEdgeUpdate.exe' || true
-taskkill -f -t -im MicrosoftEdgeUpdate.exe || true
-find '/c/Program Files (x86)/Microsoft/EdgeUpdate' -name 'MicrosoftEdgeUpdate.exe' -delete || true
-taskkill -f -t -im GoogleUpdate.exe || true
-rm -f '/c/Program Files (x86)/Google/Update/GoogleUpdate.exe' || true
-find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe' || true
-taskkill -f -t -im updater.exe || true
-find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe' -delete || true
-# Older versions
-find '/c/Program Files (x86)/Google/Update' -name 'GoogleUpdate*.exe' || true
-taskkill -f -t -im GoogleUpdate.exe || true
-find '/c/Program Files (x86)/Google/Update' -name 'GoogleUpdate*.exe' -delete || true
-
 export CURL_CI=appveyor
 verbose=''
 
