@@ -35,9 +35,13 @@ taskkill -f -t -im MicrosoftEdgeUpdate.exe || true
 find '/c/Program Files (x86)/Microsoft/EdgeUpdate' -name 'MicrosoftEdgeUpdate.exe' -delete || true
 taskkill -f -t -im GoogleUpdate.exe || true
 rm -f '/c/Program Files (x86)/Google/Update/GoogleUpdate.exe' || true
-find '/c/Program Files (x86)/Google/GoogleUpdater' '/c/Program Files (x86)/Google/Update' -name '*update*.exe' || true
+find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe' || true
 taskkill -f -t -im updater.exe || true
-find '/c/Program Files (x86)/Google/GoogleUpdater' '/c/Program Files (x86)/Google/Update' -name '*update*.exe' -delete || true
+find '/c/Program Files (x86)/Google/GoogleUpdater' -name 'updater.exe' -delete || true
+# Older versions
+find '/c/Program Files (x86)/Google/Update' -name 'GoogleUpdate*.exe' || true
+taskkill -f -t -im updater.exe || true
+find '/c/Program Files (x86)/Google/Update' -name 'GoogleUpdate*.exe' -delete || true
 
 export CURL_CI=appveyor
 verbose=''
